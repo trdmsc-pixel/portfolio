@@ -379,6 +379,54 @@ function NotificationBell({ setPage }) {
   )
 }
 
+function QuickActionsDropdown({ setPage }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  return (
+    <div ref={ref} className="relative">
+      <JellyButton icon={Plus} onClick={() => setOpen(!open)}>
+        Quick Action
+      </JellyButton>
+
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            className="absolute right-0 top-full z-50 mt-3 w-56 overflow-hidden rounded-2xl border border-white/10 bg-black/90 shadow-2xl backdrop-blur-2xl"
+          >
+            <div className="p-2 flex flex-col gap-1">
+              <button onClick={() => { setPage('videos'); setOpen(false) }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left font-body text-sm text-white/70 hover:bg-white/10 hover:text-white transition">
+                <Video size={16} /> Upload Video
+              </button>
+              <button onClick={() => { setPage('portfolio'); setOpen(false) }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left font-body text-sm text-white/70 hover:bg-white/10 hover:text-white transition">
+                <Clapperboard size={16} /> Add Portfolio Item
+              </button>
+              <button onClick={() => { setPage('hero'); setOpen(false) }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left font-body text-sm text-white/70 hover:bg-white/10 hover:text-white transition">
+                <Edit3 size={16} /> Edit Hero Text
+              </button>
+              <button onClick={() => { setPage('pricing'); setOpen(false) }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left font-body text-sm text-white/70 hover:bg-white/10 hover:text-white transition">
+                <CircleDollarSign size={16} /> Update Pricing
+              </button>
+              <button onClick={() => { setPage('images'); setOpen(false) }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left font-body text-sm text-white/70 hover:bg-white/10 hover:text-white transition">
+                <ImageIcon size={16} /> Upload Image
+              </button>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  )
+}
+
 function Shell({ page, setPage, collapsed, setCollapsed, onLogout, children }) {
   const unread = useCmsStore((s) => s.submissions.filter((item) => item.status === 'new').length)
   const settings = useCmsStore((s) => s.settings)
@@ -454,9 +502,7 @@ function Shell({ page, setPage, collapsed, setCollapsed, onLogout, children }) {
             </div>
             <div className="flex items-center gap-3">
               <NotificationBell setPage={setPage} />
-              <JellyButton icon={Plus} onClick={() => toast.info(`Quick action for ${pageLabel}`)}>
-                Quick Action
-              </JellyButton>
+              <QuickActionsDropdown setPage={setPage} />
             </div>
           </div>
         </header>
@@ -466,7 +512,7 @@ function Shell({ page, setPage, collapsed, setCollapsed, onLogout, children }) {
   )
 }
 
-function Dashboard() {
+function Dashboard({ setPage }) {
   const { portfolio, videos, media, submissions, tiers, logs } = useCmsStore()
   const cards = [
     ['Total Portfolio Items', portfolio.length, Clapperboard, accent.content],
@@ -495,23 +541,26 @@ function Dashboard() {
             {submissions.slice(0, 5).map((item) => (
               <div key={item.id} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                 <div>
-                  <div className="font-body font-bold">{item.name}</div>
-                  <div className="font-body text-xs text-white/40">{item.grade} / {new Date(item.created_at).toLocaleDateString()}</div>
+                  <div className="font-body font-bold">{item.full_name || 'Anonymous'}</div>
+                  <div className="font-body text-xs text-white/40">{item.grade_selected || item.content_type || 'Enquiry'} / {new Date(item.created_at).toLocaleDateString()}</div>
                 </div>
-                <JellyButton variant="ghost" onClick={() => toast.info(item.message)}>View</JellyButton>
+                <JellyButton variant="ghost" onClick={() => setPage('inbox')}>View</JellyButton>
               </div>
             ))}
           </div>
         </GlassPanel>
         <GlassPanel>
           <SectionTitle title="Quick Actions" />
-          <div className="grid gap-3">
-            {['Upload Video', 'Add Portfolio Item', 'Edit Hero Text', 'Update Pricing'].map((label) => (
-              <JellyButton key={label} variant="ghost" icon={Rocket} onClick={() => toast.success(`${label} ready`)}>
+            {[
+              { label: 'Upload Video', page: 'videos' },
+              { label: 'Add Portfolio Item', page: 'portfolio' },
+              { label: 'Edit Hero Text', page: 'hero' },
+              { label: 'Update Pricing', page: 'pricing' }
+            ].map(({ label, page: targetPage }) => (
+              <JellyButton key={label} variant="ghost" icon={Rocket} onClick={() => setPage(targetPage)}>
                 {label}
               </JellyButton>
             ))}
-          </div>
         </GlassPanel>
       </div>
       <GlassPanel>
@@ -1338,7 +1387,7 @@ function AppInner() {
   }, [isAdminRoute, user])
 
   const pageMap = {
-    dashboard: <Dashboard />,
+    dashboard: <Dashboard setPage={setPage} />,
     portfolio: <ContentManager type="portfolio" />,
     videos: <ContentManager type="videos" />,
     images: <ImageManager />,
