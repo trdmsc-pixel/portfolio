@@ -246,7 +246,15 @@ export const useCmsStore = create((set, get) => ({
       try { await db.updateTierInDb(tier) } catch (e) { console.error('Supabase tier error:', e) }
     }
   },
-  updatePricing: (pricing) => { set({ pricing }); get().addLog('Pricing updated', 'Pricing manager saved') },
+  updatePricing: async (pricing) => {
+    set({ pricing })
+    get().addLog('Pricing updated', 'Pricing manager saved')
+    if (isSupabaseConfigured) {
+      try {
+        await db.upsertSiteContent('pricing_data', JSON.stringify(pricing))
+      } catch (e) { console.error('Supabase pricing error:', e) }
+    }
+  },
   updateHero: async (hero) => {
     set({ hero })
     get().addLog('Hero and taglines saved', 'Site copy updated')
@@ -310,6 +318,13 @@ export const useCmsStore = create((set, get) => ({
       if (siteSettings.status === 'fulfilled' && siteSettings.value) patch.settings = { ...get().settings, ...siteSettings.value }
       if (siteContent.status === 'fulfilled' && Object.keys(siteContent.value).length) {
         const sc = siteContent.value
+        
+        if (sc.pricing_data) {
+          try {
+            patch.pricing = JSON.parse(sc.pricing_data)
+          } catch(e) { console.error('Error parsing pricing_data:', e) }
+        }
+
         patch.hero = {
           ...get().hero,
           primary: sc.hero_line_1 || get().hero.primary,
