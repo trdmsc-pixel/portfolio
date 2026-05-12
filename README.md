@@ -61,3 +61,4 @@ CLOUDINARY_UPLOAD_FOLDER=bhakty-studio
 - CMS schema with Row Level Security
 - Signed Cloudinary Edge Function
 - Seeded dashboard data for immediate local use
+
