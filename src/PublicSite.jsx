@@ -345,20 +345,28 @@ function getEmbedUrl(videoUrl) {
   return null
 }
 
-function PortfolioCard({ item, index }) {
+function getLightboxUrl(videoUrl) {
+  if (!videoUrl) return null
+  const ytMatch = videoUrl.match(/(?:youtube\.com\/(?:watch\?.*v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/)
+  if (ytMatch) return { type: 'youtube', url: `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&controls=1&rel=0` }
+  
+  const vmMatch = videoUrl.match(/vimeo\.com\/(\d+)/)
+  if (vmMatch) return { type: 'vimeo', url: `https://player.vimeo.com/video/${vmMatch[1]}?autoplay=1` }
+  
+  if (videoUrl.match(/\.(mp4|webm|mov)$/i) || videoUrl.includes('res.cloudinary.com')) {
+    return { type: 'native', url: videoUrl }
+  }
+  return null
+}
+
+function PortfolioCard({ item, index, onClick }) {
   const hasVideo = item.video_url && item.autoplay_preview !== false
   const embed = hasVideo ? getEmbedUrl(item.video_url) : null
-
-  const handleClick = () => {
-    if (item.video_url) {
-      window.open(item.video_url, '_blank', 'noopener,noreferrer')
-    }
-  }
 
   return (
     <button
       key={item.id}
-      onClick={handleClick}
+      onClick={onClick}
       className={`work-card glass group relative overflow-hidden rounded-[2rem] text-left ${index === 0 || index === 4 ? 'md:row-span-2' : ''}`}
     >
       {embed ? (
@@ -400,31 +408,78 @@ function Work() {
   const portfolio = useCmsStore((s) => s.portfolio)
   const hero = useCmsStore((s) => s.hero)
   const settings = useCmsStore((s) => s.settings)
+  const [activeItem, setActiveItem] = useState(null)
   
   if (!portfolio || portfolio.length === 0) return null
 
   return (
-    <section id="work" className="public-section px-5 py-24 md:py-36">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div>
-            <SectionKicker>Our Work Speaks</SectionKicker>
-            <h2 className="section-heading">{hero.portfolio_heading || 'EVERY FRAME, A WORLD.'}</h2>
+    <>
+      <section id="work" className="public-section px-5 py-24 md:py-36">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div>
+              <SectionKicker>Our Work Speaks</SectionKicker>
+              <h2 className="section-heading">{hero.portfolio_heading || 'EVERY FRAME, A WORLD.'}</h2>
+            </div>
+            <a href={`https://www.instagram.com/${settings.instagram_handle?.replace('@', '') || 'notshaam'}`} target="_blank" rel="noreferrer" className="glass flex w-fit items-center gap-3 rounded-2xl px-4 py-3 font-body text-xs font-black uppercase tracking-[0.18em] text-magenta">
+              <Camera size={18} /> {settings.instagram_handle || '@notshaam'} — Follow Us <ExternalLink size={14} />
+            </a>
           </div>
-          <a href={`https://www.instagram.com/${settings.instagram_handle?.replace('@', '') || 'notshaam'}`} target="_blank" rel="noreferrer" className="glass flex w-fit items-center gap-3 rounded-2xl px-4 py-3 font-body text-xs font-black uppercase tracking-[0.18em] text-magenta">
-            <Camera size={18} /> {settings.instagram_handle || '@notshaam'} — Follow Us <ExternalLink size={14} />
-          </a>
+          <div className="grid auto-rows-[260px] gap-5 md:grid-cols-3">
+            {portfolio.filter(p => p.is_visible).map((item, index) => (
+              <PortfolioCard 
+                key={item.id} 
+                item={item} 
+                index={index} 
+                onClick={() => {
+                  if (item.video_url) {
+                    setActiveItem(item)
+                  } else if (item.thumbnail) {
+                    // Fallback to opening thumbnail if there's no video but user clicks
+                    window.open(item.thumbnail, '_blank', 'noopener,noreferrer')
+                  }
+                }} 
+              />
+            ))}
+          </div>
+          <div className="marquee glass mt-10 overflow-hidden rounded-2xl py-4">
+            <div>{hero.marquee_text || 'AI FILMS · ADVERTISEMENTS · SHORT FILMS · REELS · BRAND VIDEOS · CINEMATIC CONTENT · SOCIAL MEDIA ADS · UGC · STORYTELLING ·'}&nbsp;</div>
+          </div>
         </div>
-        <div className="grid auto-rows-[260px] gap-5 md:grid-cols-3">
-          {portfolio.filter(p => p.is_visible).map((item, index) => (
-            <PortfolioCard key={item.id} item={item} index={index} />
-          ))}
-        </div>
-        <div className="marquee glass mt-10 overflow-hidden rounded-2xl py-4">
-          <div>{hero.marquee_text || 'AI FILMS · ADVERTISEMENTS · SHORT FILMS · REELS · BRAND VIDEOS · CINEMATIC CONTENT · SOCIAL MEDIA ADS · UGC · STORYTELLING ·'}&nbsp;</div>
-        </div>
-      </div>
-    </section>
+      </section>
+
+      <AnimatePresence>
+        {activeItem && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-xl md:p-10" 
+            onClick={() => setActiveItem(null)}
+          >
+            <button onClick={() => setActiveItem(null)} className="absolute right-6 top-6 text-white/50 hover:text-white transition-colors z-10">
+              <X size={32} />
+            </button>
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="relative aspect-video w-full max-w-6xl overflow-hidden rounded-3xl bg-black shadow-2xl" 
+              onClick={e => e.stopPropagation()}
+            >
+              {(() => {
+                const lb = getLightboxUrl(activeItem.video_url)
+                if (!lb) return null
+                if (lb.type === 'native') {
+                  return <video src={lb.url} controls autoPlay className="h-full w-full object-contain" />
+                }
+                return <iframe src={lb.url} className="h-full w-full border-0" allow="autoplay; fullscreen; encrypted-media" allowFullScreen title={activeItem.title} />
+              })()}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
 
