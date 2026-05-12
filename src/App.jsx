@@ -1248,6 +1248,9 @@ function HeroEditor() {
               <Field label={`Overlay Opacity: ${values.hero_bg_video_opacity || 20}%`}>
                 <input type="range" min="0" max="100" className="w-full accent-cyan" {...register('hero_bg_video_opacity')} />
               </Field>
+              <Field label={`Header Bar Opacity: ${values.header_opacity || 80}%`}>
+                <input type="range" min="0" max="100" className="w-full accent-cyan" {...register('header_opacity')} />
+              </Field>
             </div>
             <div className="col-span-2 md:col-span-1 border border-white/10 p-4 rounded-xl">
               <h3 className="mb-4 font-heading text-lg font-bold text-white">Floating Hero Image</h3>
@@ -1273,7 +1276,15 @@ function HeroEditor() {
           </div>
         </GlassPanel>
         <GlassPanel className="grid gap-4">
-          <SectionTitle title="Hero Copy" />
+          <SectionTitle title="Hero Copy & Alignment" />
+          <div className="mb-2">
+            <label className="font-body text-xs font-bold uppercase tracking-[0.14em] text-white/50">Primary Text Alignment</label>
+            <select className={inputClass('mt-2')} {...register('hero_text_align')}>
+              <option value="left">Left Aligned</option>
+              <option value="center">Center Aligned</option>
+              <option value="right">Right Aligned</option>
+            </select>
+          </div>
           {fields.map(([name, label]) => (
             <Field key={name} label={label} counter={`${values[name]?.length || 0}`}>
               {name.includes('body') || name.includes('subtext') || name.includes('marquee') ? (
@@ -1287,12 +1298,12 @@ function HeroEditor() {
         </GlassPanel>
         <GlassPanel className="sticky top-28 h-fit">
           <SectionTitle title="Live Hero Preview" />
-          <div className="rounded-3xl border border-cyan/20 bg-black/50 p-7">
+          <div className={`rounded-3xl border border-cyan/20 bg-black/50 p-7 text-${values.hero_text_align}`}>
             <div className="font-body text-xs uppercase tracking-[0.3em] text-cyan">bhakty.studio</div>
             <div className="mt-6 font-heading text-4xl font-black leading-tight">{values.primary}</div>
             <div className="font-heading text-4xl font-black leading-tight text-ember">{values.secondary}</div>
-            <p className="mt-5 font-body text-sm leading-relaxed text-white/55">{values.subtext}</p>
-            <div className="mt-6 flex gap-3">
+            <p className={`mt-5 font-body text-sm leading-relaxed text-white/55 ${values.hero_text_align === 'center' ? 'mx-auto' : ''}`}>{values.subtext}</p>
+            <div className={`mt-6 flex gap-3 ${values.hero_text_align === 'center' ? 'justify-center' : values.hero_text_align === 'right' ? 'justify-end' : 'justify-start'}`}>
               <span className="rounded-xl bg-cyan px-4 py-3 font-body text-xs font-bold uppercase text-black">{values.cta1_label}</span>
               <span className="rounded-xl border border-white/15 px-4 py-3 font-body text-xs font-bold uppercase text-white">{values.cta2_label}</span>
             </div>

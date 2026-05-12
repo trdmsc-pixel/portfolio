@@ -98,6 +98,7 @@ function CursorGlow() {
 
 function Nav({ settings }) {
   const [open, setOpen] = useState(false)
+  const hero = useCmsStore((s) => s.hero)
   const links = [
     ['Home', '#home'],
     ['Work', '#work'],
@@ -108,13 +109,13 @@ function Nav({ settings }) {
   ]
   return (
     <>
-      <nav className="fixed left-0 right-0 top-0 z-50 px-4 py-4">
+      <nav className="fixed left-0 right-0 top-0 z-50 px-4 py-4" style={{ opacity: hero.header_opacity !== undefined ? hero.header_opacity / 100 : 1 }}>
         <div className="glass mx-auto flex max-w-7xl items-center justify-between rounded-3xl px-4 py-3">
           <button onClick={() => scrollToId('#home')} className="flex items-center">
             <img 
               src={settings.site_logo || logo} 
               alt={settings.site_title} 
-              className="h-12 w-auto object-contain logo-glow" 
+              className={`h-12 w-auto object-contain ${!settings.site_logo ? 'logo-glow rounded-2xl' : ''}`} 
               style={{
                 padding: `${settings.logo_padding || 0}px`,
                 margin: `${settings.logo_margin || 0}px`,
@@ -158,7 +159,8 @@ function Nav({ settings }) {
 
 function Hero() {
   const hero = useCmsStore((s) => s.hero)
-  const letters = (hero.primary || "WE DON'T JUST CREATE CONTENT.").split('')
+  const words = (hero.primary || "WE DON'T JUST CREATE CONTENT.").split(' ')
+  const textAlign = hero.hero_text_align || 'center'
   return (
     <section id="home" className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-5 pt-28 text-center">
       {hero.hero_bg_video_upload ? (
@@ -175,7 +177,7 @@ function Hero() {
         style={{ opacity: hero.hero_bg_video_upload ? (hero.hero_bg_video_opacity / 100) : 0.8 }} 
       />
       <div className="pointer-events-none absolute inset-0 public-stars" />
-      <motion.div className="relative z-10 max-w-6xl w-full flex flex-col items-center" initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.025 } } }}>
+      <motion.div className={`relative z-10 max-w-6xl w-full flex flex-col ${textAlign === 'left' ? 'items-start text-left' : textAlign === 'right' ? 'items-end text-right' : 'items-center text-center'}`} initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.025 } } }}>
         {hero.hero_image_url && (
           <motion.img 
             src={hero.hero_image_url} 
@@ -193,21 +195,26 @@ function Hero() {
           />
         )}
         <div className="mb-6 font-body text-xs font-black uppercase tracking-[0.5em] text-cyan mt-4">Premium AI filmmaking studio</div>
-        <h1 className="font-heading text-[clamp(3rem,8vw,8.6rem)] font-black leading-[0.9] tracking-normal text-white">
-          {letters.map((letter, index) => (
-            <motion.span key={`${letter}-${index}`} className="inline-block" variants={{ hidden: { opacity: 0, y: 45, filter: 'blur(10px)' }, show: { opacity: 1, y: 0, filter: 'blur(0px)' } }}>
-              {letter === ' ' ? '\u00A0' : letter}
-            </motion.span>
+        <h1 className={`font-heading text-[clamp(3rem,8vw,8.6rem)] font-black leading-[0.9] tracking-normal text-white text-${textAlign}`}>
+          {words.map((word, wIndex) => (
+            <span key={wIndex} className="inline-block whitespace-nowrap">
+              {word.split('').map((letter, index) => (
+                <motion.span key={`${letter}-${index}`} className="inline-block" variants={{ hidden: { opacity: 0, y: 45, filter: 'blur(10px)' }, show: { opacity: 1, y: 0, filter: 'blur(0px)' } }}>
+                  {letter}
+                </motion.span>
+              ))}
+              {wIndex < words.length - 1 && <span className="inline-block">&nbsp;</span>}
+            </span>
           ))}
         </h1>
-        <motion.h2 className="mt-3 font-heading text-[clamp(2.6rem,7vw,7.4rem)] font-black leading-[0.92] text-gradient-rainbow" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}>
+        <motion.h2 className={`mt-3 font-heading text-[clamp(2.6rem,7vw,7.4rem)] font-black leading-[0.92] text-gradient-rainbow text-${textAlign}`} initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}>
           {hero.secondary || 'WE BUILD CINEMATIC WORLDS.'}
         </motion.h2>
-        <motion.p className="mx-auto mt-7 max-w-3xl font-body text-base leading-relaxed text-white/62 md:text-xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.15 }}>
+        <motion.p className={`mt-7 max-w-3xl font-body text-base leading-relaxed text-white/62 md:text-xl text-${textAlign} ${textAlign === 'center' ? 'mx-auto' : textAlign === 'right' ? 'ml-auto' : 'mr-auto'}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.15 }}>
           {hero.subtext || 'AI Films · Advertisements · Short Films · Social Media · Cinema — crafted at bhakti.studio'}
         </motion.p>
-        <motion.div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row" initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.28 }}>
-          <LiquidButton onClick={() => scrollToId(hero.cta2_target || '#portfolio')}><Play size={17} /> {hero.cta2_label || 'View Work'}</LiquidButton>
+        <motion.div className={`mt-10 flex flex-col gap-4 sm:flex-row ${textAlign === 'center' ? 'justify-center' : textAlign === 'right' ? 'justify-end' : 'justify-start'}`} initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.28 }}>
+          <LiquidButton onClick={() => scrollToId(hero.cta2_target || '#work')}><Play size={17} /> {hero.cta2_label || 'View Work'}</LiquidButton>
           <LiquidButton onClick={() => scrollToId(hero.cta1_target || '#contact')} className="!bg-black/30"><Sparkles size={17} /> {hero.cta1_label || 'Start a Project'}</LiquidButton>
         </motion.div>
       </motion.div>

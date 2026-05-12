@@ -147,7 +147,7 @@ const defaults = {
     cta1_label: 'Start a Project',
     cta1_target: '#contact',
     cta2_label: 'View Work',
-    cta2_target: '#portfolio',
+    cta2_target: '#work',
     background_video_url: '',
     about_heading: 'Delhi-born AI filmmaking studio',
     about_body: 'We combine art direction, AI production, editing, sound, and cinematic taste into one sharp creative pipeline.',
@@ -167,6 +167,8 @@ const defaults = {
     hero_image_radius: 16,
     hero_image_glow: false,
     hero_image_animate: true,
+    hero_text_align: 'center',
+    header_opacity: 80,
   },
   submissions: [],
   settings: {
@@ -267,6 +269,8 @@ export const useCmsStore = create((set, get) => ({
           hero_image_radius: String(hero.hero_image_radius ?? 16),
           hero_image_glow: hero.hero_image_glow ? 'true' : 'false',
           hero_image_animate: hero.hero_image_animate ? 'true' : 'false',
+          hero_text_align: hero.hero_text_align || 'center',
+          header_opacity: String(hero.header_opacity ?? 80),
         }
         await db.saveSiteContentBatch(entries)
       } catch (e) { console.error('Supabase hero error:', e) }
@@ -290,18 +294,20 @@ export const useCmsStore = create((set, get) => ({
   loadFromSupabase: async () => {
     if (!isSupabaseConfigured) { set({ _loaded: true }); return }
     try {
-      const [portfolio, videos, tierData, submissions, siteContent] = await Promise.allSettled([
+      const [portfolio, videos, tierData, submissions, siteContent, siteSettings] = await Promise.allSettled([
         db.fetchPortfolio(),
         db.fetchVideos(),
         db.fetchTiers(),
         db.fetchSubmissions(),
         db.fetchSiteContent(),
+        db.fetchSiteSettings(),
       ])
       const patch = { _loaded: true }
       if (portfolio.status === 'fulfilled' && portfolio.value.length) patch.portfolio = portfolio.value
       if (videos.status === 'fulfilled' && videos.value.length) patch.videos = videos.value
       if (tierData.status === 'fulfilled' && tierData.value.length) patch.tiers = tierData.value
       if (submissions.status === 'fulfilled' && submissions.value.length) patch.submissions = submissions.value
+      if (siteSettings.status === 'fulfilled' && siteSettings.value) patch.settings = { ...get().settings, ...siteSettings.value }
       if (siteContent.status === 'fulfilled' && Object.keys(siteContent.value).length) {
         const sc = siteContent.value
         patch.hero = {
@@ -322,6 +328,8 @@ export const useCmsStore = create((set, get) => ({
           hero_image_radius: sc.hero_image_radius !== undefined ? Number(sc.hero_image_radius) : 16,
           hero_image_glow: sc.hero_image_glow === 'true',
           hero_image_animate: sc.hero_image_animate === 'true',
+          hero_text_align: sc.hero_text_align || get().hero.hero_text_align,
+          header_opacity: sc.header_opacity !== undefined ? Number(sc.header_opacity) : 80,
         }
       }
       set(patch)
