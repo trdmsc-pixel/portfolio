@@ -471,7 +471,11 @@ function Work() {
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="relative aspect-video w-full max-w-6xl overflow-hidden rounded-3xl bg-black shadow-2xl" 
+              className="relative w-full max-h-full overflow-hidden rounded-3xl bg-black shadow-2xl shrink-0" 
+              style={{ 
+                aspectRatio: activeItem.aspect_ratio || '16/9',
+                maxWidth: (activeItem.aspect_ratio === '9/16' || activeItem.aspect_ratio === '4/5') ? 'min(500px, 100%)' : 'min(1152px, 100%)'
+              }}
               onClick={e => e.stopPropagation()}
             >
               {(() => {
