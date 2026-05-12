@@ -442,6 +442,24 @@ function Contact({ settings }) {
       if (isSupabaseConfigured) {
         const { error } = await supabase.from('form_submissions').insert(payload)
         if (error) throw error
+
+        // Send email notification (fire-and-forget, don't block the UI)
+        try {
+          await supabase.functions.invoke('notify-submission', {
+            body: {
+              name: values.full_name,
+              email: values.email,
+              phone: values.phone || 'N/A',
+              company: values.company || 'N/A',
+              grade: values.grade_selected,
+              content_type: values.content_type,
+              budget: values.budget,
+              brief: values.project_brief,
+            },
+          })
+        } catch (emailErr) {
+          console.warn('Email notification skipped:', emailErr.message)
+        }
       }
       setSent(true)
       reset()

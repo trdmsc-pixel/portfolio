@@ -30,6 +30,7 @@ import {
   Edit3,
   Eye,
   EyeOff,
+  Film,
   GripVertical,
   Image as ImageIcon,
   Inbox,
@@ -237,6 +238,147 @@ function Login({ onLogin }) {
   )
 }
 
+function NotificationBell({ setPage }) {
+  const submissions = useCmsStore((s) => s.submissions)
+  const logs = useCmsStore((s) => s.logs)
+  const [open, setOpen] = useState(false)
+  const [lastSeen, setLastSeen] = useState(() => {
+    try { return localStorage.getItem('bhakty_notif_seen') || '2000-01-01T00:00:00Z' } catch { return '2000-01-01T00:00:00Z' }
+  })
+  const bellRef = useRef(null)
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e) => { if (bellRef.current && !bellRef.current.contains(e.target)) setOpen(false) }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const newSubmissions = submissions.filter((s) => s.status === 'new' && s.created_at > lastSeen)
+  const recentLogs = logs.filter((l) => l.created_at > lastSeen)
+  const totalNew = newSubmissions.length + recentLogs.length
+
+  const markSeen = () => {
+    const now = new Date().toISOString()
+    setLastSeen(now)
+    try { localStorage.setItem('bhakty_notif_seen', now) } catch {}
+  }
+
+  const handleOpen = () => {
+    setOpen(!open)
+    if (!open) {
+      // Mark as seen after a brief delay so user sees the items
+      setTimeout(markSeen, 2000)
+    }
+  }
+
+  const timeAgo = (dateStr) => {
+    const diff = Date.now() - new Date(dateStr).getTime()
+    if (diff < 60000) return 'just now'
+    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`
+    return `${Math.floor(diff / 86400000)}d ago`
+  }
+
+  return (
+    <div ref={bellRef} className="relative">
+      <button onClick={handleOpen} className="relative rounded-2xl border border-white/10 p-3 text-white/60 hover:text-ember transition">
+        <Bell size={18} />
+        {totalNew > 0 ? (
+          <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 font-body text-[10px] font-black text-white animate-pulse">
+            {totalNew > 99 ? '99+' : totalNew}
+          </span>
+        ) : null}
+      </button>
+
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            className="absolute right-0 top-full z-50 mt-3 w-96 max-h-[70vh] overflow-hidden rounded-2xl border border-white/10 bg-black/90 shadow-2xl backdrop-blur-2xl"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+              <div>
+                <h3 className="font-heading text-sm font-black uppercase tracking-[0.15em]">Notifications</h3>
+                <p className="mt-0.5 font-body text-[10px] text-white/40">{totalNew} new updates</p>
+              </div>
+              {totalNew > 0 ? (
+                <button onClick={markSeen} className="font-body text-[10px] font-bold uppercase tracking-[0.15em] text-cyan hover:text-white transition">
+                  Mark all read
+                </button>
+              ) : null}
+            </div>
+
+            {/* Content */}
+            <div className="max-h-80 overflow-y-auto">
+              {/* New Submissions */}
+              {newSubmissions.length > 0 ? (
+                <div className="border-b border-white/5 px-2 py-2">
+                  <div className="px-3 py-2 font-body text-[10px] font-black uppercase tracking-[0.2em] text-ember">New Submissions</div>
+                  {newSubmissions.slice(0, 5).map((sub) => (
+                    <button
+                      key={sub.id}
+                      onClick={() => { setPage('inbox'); setOpen(false) }}
+                      className="flex w-full items-start gap-3 rounded-xl px-3 py-3 text-left transition hover:bg-white/5"
+                    >
+                      <div className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-danger" />
+                      <div className="min-w-0 flex-1">
+                        <div className="font-body text-sm font-bold text-white">{sub.full_name || 'Anonymous'}</div>
+                        <div className="mt-0.5 truncate font-body text-xs text-white/40">{sub.grade_selected || sub.content_type || 'New enquiry'}</div>
+                      </div>
+                      <div className="shrink-0 font-body text-[10px] text-white/30">{timeAgo(sub.created_at)}</div>
+                    </button>
+                  ))}
+                  {newSubmissions.length > 5 ? (
+                    <button onClick={() => { setPage('inbox'); setOpen(false) }} className="w-full px-3 py-2 text-center font-body text-xs font-bold text-cyan hover:underline">
+                      View all {newSubmissions.length} submissions →
+                    </button>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {/* Recent Activity */}
+              {recentLogs.length > 0 ? (
+                <div className="px-2 py-2">
+                  <div className="px-3 py-2 font-body text-[10px] font-black uppercase tracking-[0.2em] text-cyan">Activity</div>
+                  {recentLogs.slice(0, 5).map((log) => (
+                    <div key={log.id} className="flex items-start gap-3 rounded-xl px-3 py-2">
+                      <div className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan/60" />
+                      <div className="min-w-0 flex-1">
+                        <div className="font-body text-xs text-white/70">{log.action}</div>
+                        <div className="mt-0.5 truncate font-body text-[10px] text-white/30">{log.detail}</div>
+                      </div>
+                      <div className="shrink-0 font-body text-[10px] text-white/25">{timeAgo(log.created_at)}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              {totalNew === 0 ? (
+                <div className="px-5 py-10 text-center">
+                  <Bell className="mx-auto h-8 w-8 text-white/15" />
+                  <p className="mt-3 font-body text-sm text-white/30">You're all caught up</p>
+                  <p className="mt-1 font-body text-[10px] text-white/20">No new notifications</p>
+                </div>
+              ) : null}
+            </div>
+
+            {/* Footer */}
+            <div className="border-t border-white/10 px-5 py-3">
+              <button onClick={() => { setPage('inbox'); setOpen(false) }} className="w-full rounded-xl bg-white/5 px-4 py-2.5 text-center font-body text-xs font-bold uppercase tracking-[0.15em] text-white/50 hover:bg-white/10 hover:text-white transition">
+                View All Submissions
+              </button>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  )
+}
+
 function Shell({ page, setPage, collapsed, setCollapsed, onLogout, children }) {
   const unread = useCmsStore((s) => s.submissions.filter((item) => item.status === 'new').length)
   const settings = useCmsStore((s) => s.settings)
@@ -311,10 +453,7 @@ function Shell({ page, setPage, collapsed, setCollapsed, onLogout, children }) {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button className="relative rounded-2xl border border-white/10 p-3 text-white/60 hover:text-ember">
-                <Bell size={18} />
-                {unread ? <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-danger" /> : null}
-              </button>
+              <NotificationBell setPage={setPage} />
               <JellyButton icon={Plus} onClick={() => toast.info(`Quick action for ${pageLabel}`)}>
                 Quick Action
               </JellyButton>
@@ -1178,6 +1317,25 @@ function AppInner() {
       loadFromSupabase()
     }
   }, [loaded, loadFromSupabase])
+
+  // Supabase Realtime: listen for new form submissions (admin only)
+  useEffect(() => {
+    if (!isAdminRoute || !isSupabaseConfigured || !user) return
+    const channel = supabase
+      .channel('form_submissions_realtime')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'form_submissions' }, (payload) => {
+        const newSub = payload.new
+        useCmsStore.setState((state) => ({
+          submissions: [newSub, ...state.submissions],
+        }))
+        toast.info(`New enquiry from ${newSub.full_name || 'Anonymous'}`, {
+          description: newSub.grade_selected || newSub.content_type || 'New form submission',
+          duration: 8000,
+        })
+      })
+      .subscribe()
+    return () => { supabase.removeChannel(channel) }
+  }, [isAdminRoute, user])
 
   const pageMap = {
     dashboard: <Dashboard />,
