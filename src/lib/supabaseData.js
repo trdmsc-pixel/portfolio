@@ -47,6 +47,7 @@ function rowToPortfolioItem(row) {
     tags: Array.isArray(row.tags) ? row.tags.join(', ') : (row.tags || ''),
     is_featured: row.featured ?? false,
     is_visible: row.visible ?? true,
+    aspect_ratio: row.aspect_ratio || '16/9',
     created_at: row.created_at,
     sort_order: row.sort_order ?? 0,
   }
@@ -62,6 +63,7 @@ function portfolioItemToRow(item) {
     tags: typeof item.tags === 'string' ? item.tags.split(',').map((t) => t.trim()).filter(Boolean) : (item.tags || []),
     featured: item.is_featured ?? false,
     visible: item.is_visible ?? true,
+    aspect_ratio: item.aspect_ratio || '16/9',
     sort_order: item.sort_order ?? 0,
   }
 }

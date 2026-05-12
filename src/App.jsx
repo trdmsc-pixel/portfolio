@@ -629,6 +629,7 @@ function ContentManager({ type }) {
       is_featured: false,
       is_visible: true,
       autoplay_preview: true,
+      aspect_ratio: '16/9',
       created_at: new Date().toISOString(),
       sort_order: 99,
     })
@@ -750,7 +751,7 @@ function EditorModal({ type, item, onClose, onSave }) {
       <form onSubmit={handleSubmit(onSave)} className="grid gap-5 lg:grid-cols-[1fr_280px]">
         <div className="grid gap-4">
           <Field label="Title"><input className={inputClass()} {...register('title', { required: true })} /></Field>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-3">
             <Field label="Category">
               <select className={inputClass()} {...register('category')}>
                 {['Film', 'Advertisement', 'Short Film', 'Reel', 'YouTube', 'Brand', 'Case Study', 'Other'].map((v) => <option key={v}>{v}</option>)}
@@ -759,6 +760,14 @@ function EditorModal({ type, item, onClose, onSave }) {
             <Field label="Grade Tier">
               <select className={inputClass()} {...register('tier')}>
                 {['Content', 'Studio', 'Cinema'].map((v) => <option key={v}>{v}</option>)}
+              </select>
+            </Field>
+            <Field label="Aspect Ratio">
+              <select className={inputClass()} {...register('aspect_ratio')}>
+                <option value="16/9">16:9 (Landscape)</option>
+                <option value="9/16">9:16 (Vertical)</option>
+                <option value="4/5">4:5 (Portrait)</option>
+                <option value="1/1">1:1 (Square)</option>
               </select>
             </Field>
           </div>

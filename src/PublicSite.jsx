@@ -367,7 +367,8 @@ function PortfolioCard({ item, index, onClick }) {
     <button
       key={item.id}
       onClick={onClick}
-      className={`work-card glass group relative overflow-hidden rounded-[2rem] text-left ${index === 0 || index === 4 ? 'md:row-span-2' : ''}`}
+      className="work-card glass group relative mb-5 block w-full overflow-hidden rounded-[2rem] text-left break-inside-avoid"
+      style={{ aspectRatio: item.aspect_ratio || '16/9' }}
     >
       {embed ? (
         embed.type === 'native' ? (
@@ -425,7 +426,7 @@ function Work() {
               <Camera size={18} /> {settings.instagram_handle || '@notshaam'} — Follow Us <ExternalLink size={14} />
             </a>
           </div>
-          <div className="grid auto-rows-[260px] gap-5 md:grid-cols-3">
+          <div className="columns-1 gap-5 sm:columns-2 md:columns-3">
             {portfolio.filter(p => p.is_visible).map((item, index) => (
               <PortfolioCard 
                 key={item.id} 
@@ -471,7 +472,7 @@ function Work() {
                 const lb = getLightboxUrl(activeItem.video_url)
                 if (!lb) return null
                 if (lb.type === 'native') {
-                  return <video src={lb.url} controls autoPlay className="h-full w-full object-contain" />
+                  return <video src={lb.url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} autoPlay className="h-full w-full object-contain" />
                 }
                 return <iframe src={lb.url} className="h-full w-full border-0" allow="autoplay; fullscreen; encrypted-media" allowFullScreen title={activeItem.title} />
               })()}
