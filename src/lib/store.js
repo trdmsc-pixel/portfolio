@@ -160,6 +160,13 @@ const defaults = {
     footer_tagline: 'Create. Visualize. Inspire.',
     instagram_handle: '@notshaam',
     marquee_text: 'AI FILMMAKING / BRAND WORLDS / REELS / MUSIC VIDEOS / CINEMA GRADE',
+    hero_bg_video_upload: '',
+    hero_bg_video_opacity: 20,
+    hero_image_url: '',
+    hero_image_padding: 0,
+    hero_image_radius: 16,
+    hero_image_glow: false,
+    hero_image_animate: true,
   },
   submissions: [],
   settings: {
@@ -176,6 +183,9 @@ const defaults = {
     maintenance_mode: false,
     admin_name: 'Studio Owner',
     admin_avatar: logo,
+    site_logo: '',
+    logo_padding: 0,
+    logo_margin: 0,
   },
   logs: [],
 }
@@ -250,6 +260,13 @@ export const useCmsStore = create((set, get) => ({
           footer_tagline: hero.footer_tagline || '',
           instagram_handle: hero.instagram_handle || '',
           marquee_text: hero.marquee_text || '',
+          hero_bg_video_upload: hero.hero_bg_video_upload || '',
+          hero_bg_video_opacity: String(hero.hero_bg_video_opacity ?? 20),
+          hero_image_url: hero.hero_image_url || '',
+          hero_image_padding: String(hero.hero_image_padding ?? 0),
+          hero_image_radius: String(hero.hero_image_radius ?? 16),
+          hero_image_glow: hero.hero_image_glow ? 'true' : 'false',
+          hero_image_animate: hero.hero_image_animate ? 'true' : 'false',
         }
         await db.saveSiteContentBatch(entries)
       } catch (e) { console.error('Supabase hero error:', e) }
@@ -298,6 +315,13 @@ export const useCmsStore = create((set, get) => ({
           footer_tagline: sc.footer_tagline || get().hero.footer_tagline,
           instagram_handle: sc.instagram_handle || get().hero.instagram_handle,
           marquee_text: sc.marquee_text || get().hero.marquee_text,
+          hero_bg_video_upload: sc.hero_bg_video_upload || '',
+          hero_bg_video_opacity: Number(sc.hero_bg_video_opacity) || 20,
+          hero_image_url: sc.hero_image_url || '',
+          hero_image_padding: Number(sc.hero_image_padding) || 0,
+          hero_image_radius: sc.hero_image_radius !== undefined ? Number(sc.hero_image_radius) : 16,
+          hero_image_glow: sc.hero_image_glow === 'true',
+          hero_image_animate: sc.hero_image_animate === 'true',
         }
       }
       set(patch)

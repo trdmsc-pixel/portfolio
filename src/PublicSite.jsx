@@ -110,9 +110,16 @@ function Nav({ settings }) {
     <>
       <nav className="fixed left-0 right-0 top-0 z-50 px-4 py-4">
         <div className="glass mx-auto flex max-w-7xl items-center justify-between rounded-3xl px-4 py-3">
-          <button onClick={() => scrollToId('#home')} className="flex items-center gap-3">
-            <img src={logo} alt={settings.site_title} className="h-12 w-12 rounded-2xl object-cover logo-glow" />
-            <span className="font-heading text-lg font-black uppercase tracking-[0.22em] text-white">bhakti.studio</span>
+          <button onClick={() => scrollToId('#home')} className="flex items-center">
+            <img 
+              src={settings.site_logo || logo} 
+              alt={settings.site_title} 
+              className="h-12 w-auto object-contain logo-glow" 
+              style={{
+                padding: `${settings.logo_padding || 0}px`,
+                margin: `${settings.logo_margin || 0}px`,
+              }}
+            />
           </button>
           <div className="hidden items-center gap-8 lg:flex">
             {links.map(([label, href]) => (
@@ -154,13 +161,38 @@ function Hero() {
   const letters = (hero.primary || "WE DON'T JUST CREATE CONTENT.").split('')
   return (
     <section id="home" className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-5 pt-28 text-center">
-      <video className="absolute inset-0 h-full w-full object-cover opacity-35" autoPlay muted loop playsInline poster="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1800&q=80">
-        {hero.background_video_url && <source src={hero.background_video_url} type="video/mp4" />}
-      </video>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,245,255,.16),transparent_32%),linear-gradient(rgba(0,0,0,.72),rgba(0,0,0,.92))]" />
+      {hero.hero_bg_video_upload ? (
+        <video className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline>
+          <source src={hero.hero_bg_video_upload} />
+        </video>
+      ) : (
+        <video className="absolute inset-0 h-full w-full object-cover opacity-35" autoPlay muted loop playsInline poster="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1800&q=80">
+          {hero.background_video_url && <source src={hero.background_video_url} type="video/mp4" />}
+        </video>
+      )}
+      <div 
+        className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0),rgba(0,0,0,1))]" 
+        style={{ opacity: hero.hero_bg_video_upload ? (hero.hero_bg_video_opacity / 100) : 0.8 }} 
+      />
       <div className="pointer-events-none absolute inset-0 public-stars" />
-      <motion.div className="relative z-10 max-w-6xl" initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.025 } } }}>
-        <div className="mb-6 font-body text-xs font-black uppercase tracking-[0.5em] text-cyan">Premium AI filmmaking studio</div>
+      <motion.div className="relative z-10 max-w-6xl w-full flex flex-col items-center" initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.025 } } }}>
+        {hero.hero_image_url && (
+          <motion.img 
+            src={hero.hero_image_url} 
+            alt="Hero Visual" 
+            className={`max-w-full ${hero.hero_image_glow ? 'drop-shadow-[0_0_40px_rgba(0,245,255,0.6)]' : ''}`}
+            style={{ 
+              padding: `${hero.hero_image_padding || 0}px`,
+              borderRadius: `${hero.hero_image_radius || 0}px`,
+              maxHeight: '40vh',
+              objectFit: 'contain'
+            }}
+            variants={{ hidden: { opacity: 0, scale: 0.9 }, show: { opacity: 1, scale: 1 } }}
+            animate={hero.hero_image_animate ? { y: [0, -15, 0] } : {}}
+            transition={hero.hero_image_animate ? { duration: 4, repeat: Infinity, ease: 'easeInOut' } : {}}
+          />
+        )}
+        <div className="mb-6 font-body text-xs font-black uppercase tracking-[0.5em] text-cyan mt-4">Premium AI filmmaking studio</div>
         <h1 className="font-heading text-[clamp(3rem,8vw,8.6rem)] font-black leading-[0.9] tracking-normal text-white">
           {letters.map((letter, index) => (
             <motion.span key={`${letter}-${index}`} className="inline-block" variants={{ hidden: { opacity: 0, y: 45, filter: 'blur(10px)' }, show: { opacity: 1, y: 0, filter: 'blur(0px)' } }}>

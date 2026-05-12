@@ -298,7 +298,13 @@ export async function fetchSiteSettings() {
     .limit(1)
     .maybeSingle()
   if (error) throw error
-  return data
+  if (!data) return null
+  return {
+    ...data,
+    site_logo: data.site_logo || '',
+    logo_padding: data.logo_padding || 0,
+    logo_margin: data.logo_margin || 0,
+  }
 }
 
 export async function saveSiteSettings(settings) {
@@ -315,6 +321,9 @@ export async function saveSiteSettings(settings) {
     instagram_handle: settings.instagram,
     whatsapp_number: settings.whatsapp,
     maintenance_mode: settings.maintenance_mode ?? false,
+    site_logo: settings.site_logo || '',
+    logo_padding: settings.logo_padding || 0,
+    logo_margin: settings.logo_margin || 0,
     updated_at: new Date().toISOString(),
   }
 

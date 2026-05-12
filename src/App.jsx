@@ -973,6 +973,57 @@ function VideoEditModal({ item, onClose, onSave }) {
   )
 }
 
+function CloudinaryUploader({ label, value, onChange, accept = 'image/*' }) {
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef(null)
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'bhakty_uploads')
+
+    try {
+      // Cloudinary handles both image and video via auto or specific resource_type.
+      // We will use 'auto' to handle both.
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dtse6exar'}/auto/upload`, {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json()
+      if (data.error) throw new Error(data.error.message)
+      onChange(data.secure_url)
+      toast.success('Upload successful!')
+    } catch (err) {
+      console.error(err)
+      toast.error('Failed to upload file.')
+    } finally {
+      setUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      {label && <label className="font-body text-xs font-bold uppercase tracking-[0.14em] text-white/50">{label}</label>}
+      <div className="flex items-center gap-3">
+        <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileChange} accept={accept} />
+        <JellyButton variant="ghost" icon={UploadCloud} onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+          {uploading ? 'Uploading...' : 'Upload File'}
+        </JellyButton>
+        {value && <div className="truncate text-xs text-white/50 max-w-[200px]">{value}</div>}
+        {value && (
+          <button type="button" onClick={() => onChange('')} className="text-danger hover:text-white">
+            <X size={16} />
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
 function ImageManager() {
   const media = useCmsStore((s) => s.media)
   const upsert = useCmsStore((s) => s.upsertItem)
@@ -1168,7 +1219,6 @@ function HeroEditor() {
     ['cta1_target', 'CTA 1 Scroll Target'],
     ['cta2_label', 'CTA 2 Label'],
     ['cta2_target', 'CTA 2 Scroll Target'],
-    ['background_video_url', 'Background Video URL'],
     ['about_heading', 'About Heading'],
     ['about_body', 'About Body'],
     ['portfolio_heading', 'Portfolio Heading'],
@@ -1178,14 +1228,52 @@ function HeroEditor() {
     ['contact_heading', 'Contact Heading'],
     ['contact_subheading', 'Contact Subheading'],
     ['footer_tagline', 'Footer Tagline'],
-    ['instagram_handle', 'Instagram Handle'],
-    ['marquee_text', 'Marquee Ticker Text'],
+    ['instagram_handle', 'Instagram Handle (for Footer)'],
+    ['marquee_text', 'Marquee Text (for Footer)'],
   ]
   return (
     <PageGrid>
-      <form onSubmit={handleSubmit((data) => { updateHero(data); toast.success('Hero and taglines saved') })} className="grid gap-5 xl:grid-cols-[1fr_420px]">
+      <form onSubmit={handleSubmit((data) => { updateHero(data); toast.success('Hero and taglines saved') })} className="grid gap-5">
+        <GlassPanel>
+          <SectionTitle title="Hero Visuals" />
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="col-span-2 md:col-span-1 border border-white/10 p-4 rounded-xl">
+              <h3 className="mb-4 font-heading text-lg font-bold text-white">Background Video</h3>
+              <CloudinaryUploader 
+                label="Hero Background Video Upload" 
+                accept="video/*" 
+                value={values.hero_bg_video_upload} 
+                onChange={(url) => register('hero_bg_video_upload').onChange({ target: { name: 'hero_bg_video_upload', value: url } })} 
+              />
+              <Field label={`Overlay Opacity: ${values.hero_bg_video_opacity || 20}%`}>
+                <input type="range" min="0" max="100" className="w-full accent-cyan" {...register('hero_bg_video_opacity')} />
+              </Field>
+            </div>
+            <div className="col-span-2 md:col-span-1 border border-white/10 p-4 rounded-xl">
+              <h3 className="mb-4 font-heading text-lg font-bold text-white">Floating Hero Image</h3>
+              <CloudinaryUploader 
+                label="Hero PNG Image Upload" 
+                accept="image/png, image/jpeg, image/webp" 
+                value={values.hero_image_url} 
+                onChange={(url) => register('hero_image_url').onChange({ target: { name: 'hero_image_url', value: url } })} 
+              />
+              <div className="grid gap-4 mt-4 grid-cols-2">
+                <Field label="Padding (px)"><input type="number" className={inputClass()} {...register('hero_image_padding')} /></Field>
+                <Field label="Border Radius (px)"><input type="number" className={inputClass()} {...register('hero_image_radius')} /></Field>
+              </div>
+              <div className="flex gap-4 mt-4">
+                <label className="flex items-center gap-2 text-sm text-white/70">
+                  <input type="checkbox" {...register('hero_image_glow')} /> Enable Glow
+                </label>
+                <label className="flex items-center gap-2 text-sm text-white/70">
+                  <input type="checkbox" {...register('hero_image_animate')} /> Enable Floating Animation
+                </label>
+              </div>
+            </div>
+          </div>
+        </GlassPanel>
         <GlassPanel className="grid gap-4">
-          <SectionTitle title="Hero & Taglines Editor" />
+          <SectionTitle title="Hero Copy" />
           {fields.map(([name, label]) => (
             <Field key={name} label={label} counter={`${values[name]?.length || 0}`}>
               {name.includes('body') || name.includes('subtext') || name.includes('marquee') ? (
@@ -1302,6 +1390,21 @@ function SettingsPage() {
   return (
     <PageGrid>
       <form onSubmit={handleSubmit(saveSettings)} className="grid gap-5">
+        <GlassPanel>
+          <SectionTitle title="Site Logo" />
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="col-span-2">
+              <CloudinaryUploader 
+                label="Main Website Logo" 
+                accept="image/*" 
+                value={values.site_logo} 
+                onChange={(url) => register('site_logo').onChange({ target: { name: 'site_logo', value: url } })} 
+              />
+            </div>
+            <Field label="Logo Padding (px)"><input type="number" className={inputClass()} {...register('logo_padding')} /></Field>
+            <Field label="Logo Margin (px)"><input type="number" className={inputClass()} {...register('logo_margin')} /></Field>
+          </div>
+        </GlassPanel>
         <GlassPanel>
           <SectionTitle title="Site Settings" />
           <div className="grid gap-4 md:grid-cols-2">
