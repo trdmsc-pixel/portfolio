@@ -661,27 +661,87 @@ function FounderStory() {
   )
 }
 
-function Footer({ settings }) {
+// ─── LEGAL PAGES ────────────────────────────────────────────────────────
+const privacyPolicy = (email) => [
+  { title: "Introduction", text: "bhakti.studio ('we', 'our', 'us') respects your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website or use our creative services." },
+  { title: "Information We Collect", text: "We may collect personal information such as your name, email address, phone number, and company details when you voluntarily submit inquiries through our contact forms." },
+  { title: "How We Use Your Information", text: "We use the information we collect primarily to communicate with you regarding your project inquiries, provide our creative services, and improve our website experience. We do not sell your personal data to third parties." },
+  { title: "Data Security", text: "We implement reasonable security measures to protect your personal information. However, no method of transmission over the Internet or electronic storage is 100% secure." },
+  { title: "Contact Us", text: `If you have questions about this Privacy Policy, please contact us at ${email}.` }
+]
+
+const termsOfService = (email) => [
+  { title: "Acceptance of Terms", text: "By accessing and using bhakti.studio, you accept and agree to be bound by the terms and provision of this agreement." },
+  { title: "Creative Services & Deliverables", text: "We provide premium AI filmmaking, editing, and content creation services. All project timelines, deliverables, and revisions will be mutually agreed upon in writing prior to project commencement." },
+  { title: "Intellectual Property & Copyright", text: "Unless otherwise explicitly agreed in writing, bhakti.studio retains all intellectual property rights to draft materials and unused concepts. Full usage rights for the final delivered video assets are transferred to the client only upon full payment of the agreed project fee." },
+  { title: "Payment Terms", text: "A non-refundable deposit is generally required to commence work. The remaining balance is due upon project completion and before the delivery of the final high-resolution, unwatermarked files." },
+  { title: "Contact", text: `For legal inquiries, contact us at ${email}.` }
+]
+
+const refundPolicy = (email) => [
+  { title: "Non-Refundable Deposits", text: "Due to the highly customized nature of our creative work and the immediate allocation of time and resources, all project deposits are strictly non-refundable once work has commenced." },
+  { title: "Cancellations", text: "If a project is cancelled by the client after work has begun, the client is responsible for paying for all work completed up to the date of cancellation. The initial deposit will be retained to cover administrative and creative costs." },
+  { title: "Revisions", text: "We strive for complete satisfaction. If you are not satisfied with the initial draft, we will execute revisions as outlined in your specific project agreement. Refunds are not provided for completed creative services." },
+  { title: "Questions", text: `If you have questions regarding payments or refunds, please reach out to ${email}.` }
+]
+
+function LegalPage({ title, lastUpdated, sections, onBack }) {
+  useEffect(() => { window.scrollTo(0, 0) }, [])
+  return (
+    <main className="public-site noise min-h-screen bg-black text-white px-5 py-24 md:py-36">
+      <div className="mx-auto max-w-4xl">
+        <button onClick={onBack} className="mb-10 flex items-center gap-2 font-body text-xs font-bold uppercase tracking-[0.18em] text-white/50 hover:text-cyan transition-colors">
+          <ArrowDown className="rotate-90" size={16} /> Back to Site
+        </button>
+        <div className="glass rounded-[2rem] p-8 md:p-16">
+          <h1 className="font-heading text-4xl font-black md:text-5xl text-white">{title}</h1>
+          <p className="mt-4 font-body text-sm text-white/45">Last Updated: {lastUpdated}</p>
+          <div className="mt-12 space-y-12">
+            {sections.map((sec, idx) => (
+              <div key={idx}>
+                <h2 className="font-heading text-2xl font-black text-cyan">{sec.title}</h2>
+                <p className="mt-4 font-body text-base leading-relaxed text-white/70">{sec.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </main>
+  )
+}
+
+function Footer({ settings, navigate }) {
   const hero = useCmsStore((s) => s.hero)
   const links = ['Home', 'Work', 'Services', 'Pricing', 'About', 'Contact']
+  const legalLinks = [
+    { name: 'Privacy Policy', path: '/privacy' },
+    { name: 'Terms of Service', path: '/terms' },
+    { name: 'Refund Policy', path: '/refund' },
+  ]
+  
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-black px-5 py-12">
       <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan to-transparent" />
-      <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-3">
-        <div>
+      <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-4">
+        <div className="md:col-span-1">
           <img src={logo} alt="" className="h-16 w-16 rounded-2xl object-cover logo-glow" />
           <p className="mt-4 font-body text-sm text-white/52">{hero.footer_tagline || 'Crafting cinematic worlds, one frame at a time.'}</p>
         </div>
-        <div className="flex flex-wrap gap-4 md:justify-center">
-          {links.map((link) => <button key={link} onClick={() => scrollToId(`#${link.toLowerCase() === 'home' ? 'home' : link.toLowerCase()}`)} className="font-body text-xs font-bold uppercase tracking-[0.18em] text-white/45 hover:text-cyan">{link}</button>)}
+        <div className="flex flex-col gap-4">
+          <div className="font-body text-[10px] font-black uppercase tracking-[0.2em] text-cyan">Navigation</div>
+          {links.map((link) => <button key={link} onClick={() => { if(window.location.pathname !== '/') navigate('/'); setTimeout(() => scrollToId(`#${link.toLowerCase() === 'home' ? 'home' : link.toLowerCase()}`), 100) }} className="text-left font-body text-xs font-bold uppercase tracking-[0.18em] text-white/45 hover:text-cyan">{link}</button>)}
+        </div>
+        <div className="flex flex-col gap-4">
+          <div className="font-body text-[10px] font-black uppercase tracking-[0.2em] text-cyan">Legal</div>
+          {legalLinks.map((link) => <button key={link.name} onClick={() => navigate(link.path)} className="text-left font-body text-xs font-bold uppercase tracking-[0.18em] text-white/45 hover:text-cyan">{link.name}</button>)}
         </div>
         <div className="md:text-right">
-          <a href={`https://www.instagram.com/${settings.instagram_handle?.replace('@', '') || 'notshaam'}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 font-body text-sm font-bold text-magenta"><Camera size={18} /> {settings.instagram_handle || '@notshaam'}</a>
+          <a href={`https://www.instagram.com/${settings.instagram_handle?.replace('@', '') || 'notshaam'}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-end gap-2 font-body text-sm font-bold text-magenta w-full"><Camera size={18} /> {settings.instagram_handle || '@notshaam'}</a>
           <p className="mt-3 font-body text-sm text-white/42">{settings.agency_email}</p>
         </div>
       </div>
       <div className="mx-auto mt-10 max-w-7xl border-t border-white/10 pt-6 text-center font-body text-xs text-white/32">
-        © 2026 bhakti.studio. All rights reserved. Crafted with AI & Imagination.
+        © {new Date().getFullYear()} bhakti.studio. All rights reserved. Crafted with AI & Imagination.
       </div>
     </footer>
   )
@@ -691,6 +751,7 @@ export default function PublicSite() {
   const settings = useCmsStore((s) => s.settings)
   const loadedStore = useCmsStore((s) => s._loaded)
   const [loaded, setLoaded] = useState(false)
+  const [currentPath, setCurrentPath] = useState(window.location.pathname)
 
   useEffect(() => {
     document.title = settings.site_title || 'bhakti.studio'
@@ -699,6 +760,18 @@ export default function PublicSite() {
   }, [settings])
 
   useEffect(() => {
+    const handlePopState = () => setCurrentPath(window.location.pathname)
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
+
+  const navigate = (path) => {
+    window.history.pushState({}, '', path)
+    setCurrentPath(path)
+  }
+
+  useEffect(() => {
+    if (currentPath !== '/') return
     const t = setTimeout(() => setLoaded(true), 1200)
     gsap.utils.toArray('.public-section').forEach((section) => {
       gsap.fromTo(section, { y: 90, opacity: 0 }, {
@@ -713,7 +786,7 @@ export default function PublicSite() {
       clearTimeout(t)
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
     }
-  }, [])
+  }, [currentPath])
 
   if (settings.maintenance_mode) {
     return (
@@ -727,6 +800,10 @@ export default function PublicSite() {
     )
   }
 
+  if (currentPath === '/privacy') return <LegalPage title="Privacy Policy" lastUpdated={new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} sections={privacyPolicy(settings.agency_email)} onBack={() => navigate('/')} />
+  if (currentPath === '/terms') return <LegalPage title="Terms of Service" lastUpdated={new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} sections={termsOfService(settings.agency_email)} onBack={() => navigate('/')} />
+  if (currentPath === '/refund') return <LegalPage title="Refund Policy" lastUpdated={new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} sections={refundPolicy(settings.agency_email)} onBack={() => navigate('/')} />
+
   return (
     <main className="public-site noise min-h-screen bg-black text-white">
       <Loader done={loaded} />
@@ -739,7 +816,7 @@ export default function PublicSite() {
       <Pricing />
       <Contact settings={settings} />
       <FounderStory />
-      <Footer settings={settings} />
+      <Footer settings={settings} navigate={navigate} />
     </main>
   )
 }
