@@ -707,6 +707,8 @@ function ContentManager({ type }) {
 
 function EditorModal({ type, item, onClose, onSave }) {
   const isVideo = type === 'videos'
+  const galleryVideos = useCmsStore((s) => s.videos)
+  const galleryImages = useCmsStore((s) => s.media)
   const { register, handleSubmit, control, reset, setValue } = useForm()
   const thumbInputRef = useRef(null)
   const [uploadingThumb, setUploadingThumb] = useState(false)
@@ -761,13 +763,35 @@ function EditorModal({ type, item, onClose, onSave }) {
             </Field>
           </div>
           <div className="grid gap-4 md:grid-cols-[1fr_auto]">
-            <Field label="Thumbnail Image URL"><input className={inputClass()} {...register('thumbnail')} /></Field>
+            <Field label="Thumbnail Image URL">
+              <input className={inputClass()} {...register('thumbnail')} />
+              {galleryImages && galleryImages.length > 0 && (
+                <select className={inputClass('mt-2 text-xs text-white/50')} onChange={(e) => { if(e.target.value) setValue('thumbnail', e.target.value, { shouldDirty: true }) }}>
+                  <option value="">-- Or select from Image Gallery --</option>
+                  {galleryImages.map(img => <option key={img.id} value={img.url}>{img.filename}</option>)}
+                </select>
+              )}
+            </Field>
             <div className="pt-7">
               <JellyButton type="button" icon={UploadCloud} onClick={() => thumbInputRef.current?.click()} disabled={uploadingThumb}>{uploadingThumb ? '...' : 'Upload'}</JellyButton>
               <input type="file" ref={thumbInputRef} className="hidden" onChange={handleThumbUpload} accept="image/*" />
             </div>
           </div>
-          <Field label="Video URL"><input className={inputClass()} {...register('video_url')} /></Field>
+          <Field label="Video URL">
+            <input className={inputClass()} {...register('video_url')} />
+            {galleryVideos && galleryVideos.length > 0 && (
+              <select className={inputClass('mt-2 text-xs text-white/50')} onChange={(e) => {
+                if(e.target.value) {
+                  setValue('video_url', e.target.value, { shouldDirty: true });
+                  const vid = galleryVideos.find(v => v.video_url === e.target.value);
+                  if (vid && vid.thumbnail) setValue('thumbnail', vid.thumbnail, { shouldDirty: true });
+                }
+              }}>
+                <option value="">-- Or select from Video Gallery --</option>
+                {galleryVideos.map(vid => <option key={vid.id} value={vid.video_url}>{vid.title}</option>)}
+              </select>
+            )}
+          </Field>
           {isVideo ? (
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Duration"><input className={inputClass()} {...register('duration')} /></Field>
@@ -828,6 +852,17 @@ function VideoAddModal({ open, onClose, onSave }) {
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
   const [preview, setPreview] = useState(null)
+  
+  const handleDirectUpload = (uploadedUrl) => {
+    setUrl(uploadedUrl)
+    setPreview({
+      platform: 'direct_upload',
+      title: 'Uploaded Video',
+      thumbnail: '',
+      originalUrl: uploadedUrl,
+      embedUrl: uploadedUrl
+    })
+  }
 
   const handleFetch = async () => {
     if (!url.trim()) { toast.error('Paste a video URL first'); return }
@@ -867,11 +902,11 @@ function VideoAddModal({ open, onClose, onSave }) {
     onSave({
       id: Date.now().toString(36) + Math.random().toString(36).slice(2),
       title: preview.title || `${preview.platform} video`,
-      category: preview.platform === 'youtube' ? 'YouTube' : preview.platform === 'vimeo' ? 'Vimeo' : 'Other',
+      category: preview.platform === 'youtube' ? 'YouTube' : preview.platform === 'vimeo' ? 'Vimeo' : preview.platform === 'instagram' ? 'Instagram' : preview.platform === 'direct_upload' ? 'Upload' : 'Other',
       tier: 'Studio',
       thumbnail: preview.thumbnail || '',
       video_url: preview.originalUrl,
-      embed_url: preview.embedUrl || '',
+      embed_url: preview.embedUrl || preview.originalUrl || '',
       platform: preview.platform,
       description: '',
       tags: preview.platform,
@@ -905,6 +940,12 @@ function VideoAddModal({ open, onClose, onSave }) {
             </JellyButton>
           </div>
         </Field>
+        
+        {!preview && (
+          <Field label="Or Upload Video Directly">
+            <CloudinaryUploader accept="video/*" value={url} onChange={handleDirectUpload} />
+          </Field>
+        )}
 
         {preview && (
           <div className="glass overflow-hidden rounded-2xl">
@@ -939,18 +980,33 @@ function VideoAddModal({ open, onClose, onSave }) {
 }
 
 function VideoEditModal({ item, onClose, onSave }) {
-  const { register, handleSubmit, reset } = useForm()
+  const { register, handleSubmit, reset, setValue, watch } = useForm()
 
   useEffect(() => {
     if (item && typeof item === 'object') reset(item)
   }, [item, reset])
 
+  const videoUrl = watch('video_url')
+  const thumbUrl = watch('thumbnail')
+
   return (
     <Modal title={`Edit: ${item?.title || 'Video'}`} open={!!item && typeof item === 'object'} onClose={onClose}>
       <form onSubmit={handleSubmit(onSave)} className="grid gap-4">
         <Field label="Title"><input className={inputClass()} {...register('title')} /></Field>
-        <Field label="Video URL"><input className={inputClass()} {...register('video_url')} /></Field>
-        <Field label="Thumbnail URL"><input className={inputClass()} {...register('thumbnail')} /></Field>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="Video URL">
+            <div className="flex flex-col gap-2">
+              <input className={inputClass()} {...register('video_url')} />
+              <CloudinaryUploader accept="video/*" value={videoUrl} onChange={(val) => setValue('video_url', val, { shouldDirty: true })} />
+            </div>
+          </Field>
+          <Field label="Thumbnail URL">
+            <div className="flex flex-col gap-2">
+              <input className={inputClass()} {...register('thumbnail')} />
+              <CloudinaryUploader accept="image/*" value={thumbUrl} onChange={(val) => setValue('thumbnail', val, { shouldDirty: true })} />
+            </div>
+          </Field>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Category">
             <select className={inputClass()} {...register('category')}>

@@ -332,16 +332,22 @@ function getEmbedUrl(videoUrl) {
   if (!videoUrl) return null
   // YouTube
   const ytMatch = videoUrl.match(/(?:youtube\.com\/(?:watch\?.*v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/)
-  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=1&loop=1&controls=0&playlist=${ytMatch[1]}&playsinline=1&showinfo=0&modestbranding=1&rel=0`
+  if (ytMatch) return { type: 'youtube', url: `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=1&loop=1&controls=0&playlist=${ytMatch[1]}&playsinline=1&showinfo=0&modestbranding=1&rel=0` }
   // Vimeo
   const vmMatch = videoUrl.match(/vimeo\.com\/(\d+)/)
-  if (vmMatch) return `https://player.vimeo.com/video/${vmMatch[1]}?autoplay=1&muted=1&loop=1&background=1`
+  if (vmMatch) return { type: 'vimeo', url: `https://player.vimeo.com/video/${vmMatch[1]}?autoplay=1&muted=1&loop=1&background=1` }
+  
+  // Direct Video
+  if (videoUrl.match(/\.(mp4|webm|mov)$/i) || videoUrl.includes('res.cloudinary.com')) {
+    return { type: 'native', url: videoUrl }
+  }
+  
   return null
 }
 
 function PortfolioCard({ item, index }) {
   const hasVideo = item.video_url && item.autoplay_preview !== false
-  const embedUrl = hasVideo ? getEmbedUrl(item.video_url) : null
+  const embed = hasVideo ? getEmbedUrl(item.video_url) : null
 
   const handleClick = () => {
     if (item.video_url) {
@@ -355,14 +361,25 @@ function PortfolioCard({ item, index }) {
       onClick={handleClick}
       className={`work-card glass group relative overflow-hidden rounded-[2rem] text-left ${index === 0 || index === 4 ? 'md:row-span-2' : ''}`}
     >
-      {embedUrl ? (
-        <iframe
-          src={embedUrl}
-          className="pointer-events-none absolute inset-0 h-full w-full scale-[1.3] border-0 object-cover"
-          allow="autoplay; encrypted-media"
-          loading="lazy"
-          title={item.title}
-        />
+      {embed ? (
+        embed.type === 'native' ? (
+          <video
+            src={embed.url}
+            className="pointer-events-none absolute inset-0 h-full w-full border-0 object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        ) : (
+          <iframe
+            src={embed.url}
+            className="pointer-events-none absolute inset-0 h-full w-full scale-[1.3] border-0 object-cover"
+            allow="autoplay; encrypted-media"
+            loading="lazy"
+            title={item.title}
+          />
+        )
       ) : (
         <img src={item.thumbnail} alt={item.title} loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-110" />
       )}
