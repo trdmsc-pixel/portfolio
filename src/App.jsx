@@ -843,7 +843,10 @@ function parseVideoUrl(url) {
   // Vimeo: vimeo.com/ID
   m = url.match(/vimeo\.com\/(\d+)/)
   if (m) return { platform: 'vimeo', id: m[1], thumbnail: null, embedUrl: `https://player.vimeo.com/video/${m[1]}?autoplay=1&muted=1&loop=1&background=1` }
-  // Instagram Reel
+  // Facebook
+  m = url.match(/(?:facebook\.com\/.*\/videos\/|fb\.watch\/|facebook\.com\/video\.php\?v=)([\w-]+)/)
+  if (m) return { platform: 'facebook', id: m[1], thumbnail: null, embedUrl: null }
+  // Instagram Reel or Post
   m = url.match(/instagram\.com\/(?:reel|p)\/([\w-]+)/)
   if (m) return { platform: 'instagram', id: m[1], thumbnail: null, embedUrl: null }
   return { platform: 'other', id: null, thumbnail: null, embedUrl: null }
@@ -899,6 +902,18 @@ function VideoAddModal({ open, onClose, onSave }) {
         const data = await res.json()
         thumb = data.thumbnail_url || null
         title = data.title || ''
+      } catch { /* ignore */ }
+    }
+
+    // For Facebook and Instagram, fetch thumbnail and title via microlink open graph proxy
+    if (parsed.platform === 'facebook' || parsed.platform === 'instagram') {
+      try {
+        const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url.trim())}`)
+        const data = await res.json()
+        if (data.status === 'success' && data.data) {
+          title = data.data.title || ''
+          thumb = data.data.image?.url || null
+        }
       } catch { /* ignore */ }
     }
 

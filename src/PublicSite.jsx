@@ -353,6 +353,12 @@ function getLightboxUrl(videoUrl) {
   const vmMatch = videoUrl.match(/vimeo\.com\/(\d+)/)
   if (vmMatch) return { type: 'vimeo', url: `https://player.vimeo.com/video/${vmMatch[1]}?autoplay=1` }
   
+  const fbMatch = videoUrl.match(/(?:facebook\.com\/.*\/videos\/|fb\.watch\/|facebook\.com\/video\.php\?v=)([\w-]+)/)
+  if (fbMatch) return { type: 'facebook', url: `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(videoUrl)}&show_text=false&width=560` }
+
+  const igMatch = videoUrl.match(/instagram\.com\/(?:reel|p)\/([\w-]+)/)
+  if (igMatch) return { type: 'instagram', url: `https://www.instagram.com/p/${igMatch[1]}/embed` }
+  
   if (videoUrl.match(/\.(mp4|webm|mov)$/i) || videoUrl.includes('res.cloudinary.com')) {
     return { type: 'native', url: videoUrl }
   }
