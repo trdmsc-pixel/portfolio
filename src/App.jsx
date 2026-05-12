@@ -51,385 +51,7 @@ import * as db from './lib/supabaseData'
 import PublicSite from './PublicSite'
 
 const queryClient = new QueryClient()
-const logo = '/brand/bhakty-studio-logo.png'
-
-const accent = {
-  content: '#00e5ff',
-  studio: '#8f5cff',
-  cinema: '#ffb800',
-  plasma: '#6dff6d',
-  magenta: '#ff3df2',
-}
-
-const now = new Date().toISOString()
-
-const defaults = {
-  portfolio: [
-    {
-      id: 'p1',
-      title: 'Temple of Light',
-      category: 'Film',
-      tier: 'Cinema',
-      thumbnail:
-        'https://images.unsplash.com/photo-1518929458119-e5bf444c30f4?auto=format&fit=crop&w=900&q=80',
-      video_url: 'https://vimeo.com/',
-      description: 'A cinematic devotional world built with AI production design.',
-      tags: 'AI, Cinema, Devotional',
-      is_featured: true,
-      is_visible: true,
-      created_at: now,
-      sort_order: 1,
-    },
-    {
-      id: 'p2',
-      title: 'Brand Fire Reel',
-      category: 'Advertisement',
-      tier: 'Studio',
-      thumbnail:
-        'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=80',
-      video_url: 'https://youtube.com/',
-      description: 'High-energy launch visuals for a modern digital campaign.',
-      tags: 'Brand, Reel, Motion',
-      is_featured: false,
-      is_visible: true,
-      created_at: now,
-      sort_order: 2,
-    },
-  ],
-  videos: [
-    {
-      id: 'v1',
-      title: 'Infinity Logo Motion',
-      category: 'Brand',
-      tier: 'Studio',
-      duration: '0:42',
-      views: '12.4k',
-      thumbnail:
-        'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=80',
-      video_url: 'https://youtube.com/',
-      tags: 'Logo, Motion',
-      is_featured: true,
-      is_visible: true,
-      sort_order: 1,
-    },
-    {
-      id: 'v2',
-      title: 'Cinema Grade Breakdown',
-      category: 'Case Study',
-      tier: 'Cinema',
-      duration: '3:18',
-      views: '8.2k',
-      thumbnail:
-        'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=900&q=80',
-      video_url: 'https://vimeo.com/',
-      tags: 'Case Study, AI',
-      is_featured: false,
-      is_visible: true,
-      sort_order: 2,
-    },
-  ],
-  media: [
-    {
-      id: 'm1',
-      filename: 'bhakty-studio-logo.png',
-      url: logo,
-      dimensions: '1536 x 1024',
-      size: '2.3 MB',
-      used_in: 'Login, Sidebar, Brand',
-      tags: 'logo, brand',
-      uploaded_at: now,
-    },
-    {
-      id: 'm2',
-      filename: 'hero-cinematic-bg.jpg',
-      url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
-      dimensions: '1600 x 900',
-      size: '184 KB',
-      used_in: 'Hero BG',
-      tags: 'hero, background',
-      uploaded_at: now,
-    },
-  ],
-  tiers: [
-    {
-      id: 'content',
-      name: 'Content Grade',
-      tagline: 'Fast social-first production',
-      description: 'AI-assisted production for reels, shorts, quick brand stories, and ongoing content calendars.',
-      accent_color: accent.content,
-      badge: 'FASTEST',
-      cta_label: 'Book Content Grade',
-      starting_price: 'From ₹10,000',
-      is_visible: true,
-      features: [
-        { id: 'cf1', text: 'Script and storyboard', enabled: true },
-        { id: 'cf2', text: 'AI visuals and voiceover', enabled: true },
-        { id: 'cf3', text: '2 revision rounds', enabled: true },
-      ],
-    },
-    {
-      id: 'studio',
-      name: 'Studio Grade',
-      tagline: 'Premium brand storytelling',
-      description: 'A stronger creative package with advanced post-production, sharper art direction, and 4K delivery.',
-      accent_color: accent.violet,
-      badge: 'MOST POPULAR',
-      cta_label: 'Book Studio Grade',
-      starting_price: 'From ₹35,000',
-      is_visible: true,
-      features: [
-        { id: 'sf1', text: 'Advanced post-production', enabled: true },
-        { id: 'sf2', text: 'Dedicated project manager', enabled: true },
-        { id: 'sf3', text: '4K export and social cutdowns', enabled: true },
-      ],
-    },
-    {
-      id: 'cinema',
-      name: 'Cinema Grade',
-      tagline: 'Flagship cinematic worlds',
-      description: 'Full creative direction for hero films, premium campaigns, music videos, and narrative shorts.',
-      accent_color: accent.cinema,
-      badge: 'PREMIUM',
-      cta_label: 'Book Cinema Grade',
-      starting_price: 'Custom Quote',
-      is_visible: true,
-      features: [
-        { id: 'xf1', text: 'Director-led creative package', enabled: true },
-        { id: 'xf2', text: 'Cinematic sound and grading', enabled: true },
-        { id: 'xf3', text: 'Broadcast-ready master', enabled: true },
-      ],
-    },
-  ],
-  pricing: {
-    content: {
-      note: 'Bulk reels and monthly retainers available.',
-      badge: 'From ₹10,000',
-      rows: [
-        { id: 'pr1', service: 'Short Reel', description: '15 to 45 second social asset', price: 10000, suffix: '/ video', is_visible: true },
-        { id: 'pr2', service: 'Explainer Short', description: 'Up to 90 seconds', price: 18000, suffix: '/ video', is_visible: true },
-      ],
-    },
-    studio: {
-      note: 'Best for brand campaigns and music videos.',
-      badge: 'From ₹35,000',
-      rows: [
-        { id: 'pr3', service: 'Brand Film', description: '2 to 4 minute cinematic edit', price: 35000, suffix: '/ project', is_visible: true },
-        { id: 'pr4', service: 'Music Visualizer', description: 'Art-directed AI visual video', price: 45000, suffix: '/ track', is_visible: true },
-      ],
-    },
-    cinema: {
-      note: 'Built as custom productions.',
-      badge: 'Custom Quote',
-      rows: [
-        { id: 'pr5', service: 'Hero Campaign Film', description: 'Premium creative direction and finish', price: 125000, suffix: '/ project', is_visible: true },
-        { id: 'pr6', service: 'Short Film Package', description: 'Narrative film workflow', price: 180000, suffix: 'Custom Quote', is_visible: true },
-      ],
-    },
-    global_note: 'All prices are exclusive of GST, talent licensing, paid media, and rush delivery unless stated otherwise.',
-  },
-  hero: {
-    primary: "WE DON'T JUST CREATE CONTENT.",
-    secondary: 'WE BUILD CINEMATIC WORLDS.',
-    subtext: 'Bhakty Studio creates AI-powered films, reels, ads, and visual universes for brands and storytellers.',
-    cta1_label: 'Start a Project',
-    cta1_target: '#contact',
-    cta2_label: 'View Work',
-    cta2_target: '#portfolio',
-    background_video_url: '',
-    about_heading: 'Delhi-born AI filmmaking studio',
-    about_body: 'We combine art direction, AI production, editing, sound, and cinematic taste into one sharp creative pipeline.',
-    portfolio_heading: 'Selected Work',
-    portfolio_subheading: 'Films, ads, reels, and visual experiments.',
-    pricing_heading: 'Production Grades',
-    pricing_subheading: 'Transparent packages for different levels of ambition.',
-    contact_heading: 'Start Your Film',
-    contact_subheading: 'Send the brief. We shape the world.',
-    footer_tagline: 'Create. Visualize. Inspire.',
-    instagram_handle: '@notshaam',
-    marquee_text: 'AI FILMMAKING / BRAND WORLDS / REELS / MUSIC VIDEOS / CINEMA GRADE',
-  },
-  submissions: [
-    {
-      id: 's1',
-      name: 'Aarav Mehta',
-      email: 'aarav@example.com',
-      phone: '+91 98765 43210',
-      company: 'Mehta Foods',
-      grade: 'Studio',
-      content_type: 'Brand Film',
-      duration: '3 minutes',
-      budget: '₹60,000+',
-      message: 'We need a cinematic launch film for a new product line.',
-      source: 'Instagram',
-      status: 'new',
-      created_at: now,
-    },
-    {
-      id: 's2',
-      name: 'Riya Kapoor',
-      email: 'riya@example.com',
-      phone: '+91 99887 77665',
-      company: 'Independent Artist',
-      grade: 'Cinema',
-      content_type: 'Music Video',
-      duration: '4 minutes',
-      budget: 'Custom Quote',
-      message: 'Looking for a surreal AI-assisted devotional music video.',
-      source: 'Referral',
-      status: 'in_progress',
-      created_at: now,
-    },
-  ],
-  settings: {
-    site_title: 'bhakty.studio',
-    meta_description: 'AI filmmaking studio for brands, artists, and storytellers.',
-    og_image: '',
-    favicon: '',
-    analytics_id: '',
-    pixel_id: '',
-    agency_email: 'hello@bhakty.studio',
-    phone: '+91 99581 94155',
-    instagram: '@notshaam',
-    whatsapp: '+91 99581 94155',
-    maintenance_mode: false,
-    admin_name: 'Studio Owner',
-    admin_avatar: logo,
-  },
-  logs: [
-    { id: 'l1', action: 'Pricing updated', detail: 'Cinema Grade starting price changed', created_at: now },
-    { id: 'l2', action: 'Portfolio reordered', detail: 'Temple of Light pinned first', created_at: now },
-    { id: 'l3', action: 'Hero copy saved', detail: 'Primary line refreshed', created_at: now },
-  ],
-}
-
-const useCmsStore = create((set, get) => ({
-  ...defaults,
-  _loaded: false,
-  addLog: (action, detail) =>
-    set((state) => ({
-      logs: [{ id: crypto.randomUUID(), action, detail, created_at: new Date().toISOString() }, ...state.logs].slice(0, 20),
-    })),
-  upsertItem: async (key, item, label = 'Content') => {
-    const exists = get()[key].some((entry) => entry.id === item.id)
-    const finalItem = exists ? item : { ...item, id: item.id || crypto.randomUUID(), sort_order: get()[key].length + 1 }
-    const next = exists
-      ? get()[key].map((entry) => (entry.id === finalItem.id ? finalItem : entry))
-      : [finalItem, ...get()[key]]
-    set({ [key]: next })
-    get().addLog(`${label} saved`, finalItem.title || finalItem.filename || finalItem.name || 'Record updated')
-    // Sync to Supabase
-    if (isSupabaseConfigured) {
-      try {
-        if (key === 'portfolio') await db.upsertPortfolioItem(finalItem)
-        else if (key === 'videos') await db.upsertVideoItem(finalItem)
-      } catch (e) { console.error('Supabase sync error:', e) }
-    }
-  },
-  removeItem: async (key, id, label = 'Content') => {
-    set((state) => ({ [key]: state[key].filter((item) => item.id !== id) }))
-    get().addLog(`${label} deleted`, id)
-    if (isSupabaseConfigured) {
-      try {
-        if (key === 'portfolio') await db.deletePortfolioItem(id)
-        else if (key === 'videos') await db.deleteVideoItem(id)
-      } catch (e) { console.error('Supabase delete error:', e) }
-    }
-  },
-  reorder: async (key, activeId, overId, label = 'Content') => {
-    const oldIndex = get()[key].findIndex((item) => item.id === activeId)
-    const newIndex = get()[key].findIndex((item) => item.id === overId)
-    if (oldIndex < 0 || newIndex < 0) return
-    const reordered = arrayMove(get()[key], oldIndex, newIndex).map((item, index) => ({ ...item, sort_order: index + 1 }))
-    set({ [key]: reordered })
-    get().addLog(`${label} reordered`, 'Display order changed')
-    if (isSupabaseConfigured) {
-      try {
-        if (key === 'portfolio') await db.reorderPortfolio(reordered)
-        else if (key === 'videos') await db.reorderVideos(reordered)
-      } catch (e) { console.error('Supabase reorder error:', e) }
-    }
-  },
-  updateTier: async (tier) => {
-    set((state) => ({ tiers: state.tiers.map((item) => (item.id === tier.id ? tier : item)) }))
-    get().addLog('Tier saved', tier.name)
-    if (isSupabaseConfigured) {
-      try { await db.updateTierInDb(tier) } catch (e) { console.error('Supabase tier error:', e) }
-    }
-  },
-  updatePricing: (pricing) => { set({ pricing }); get().addLog('Pricing updated', 'Pricing manager saved') },
-  updateHero: async (hero) => {
-    set({ hero })
-    get().addLog('Hero and taglines saved', 'Site copy updated')
-    if (isSupabaseConfigured) {
-      try {
-        const entries = {
-          hero_line_1: hero.primary,
-          hero_line_2: hero.secondary,
-          hero_subtext: hero.subtext,
-          hero_video_url: hero.background_video_url || '',
-          about_heading: hero.about_heading || '',
-          about_body: hero.about_body || '',
-          footer_tagline: hero.footer_tagline || '',
-          instagram_handle: hero.instagram_handle || '',
-          marquee_text: hero.marquee_text || '',
-        }
-        await db.saveSiteContentBatch(entries)
-      } catch (e) { console.error('Supabase hero error:', e) }
-    }
-  },
-  updateSettings: async (settings) => {
-    set({ settings })
-    get().addLog('Settings saved', 'Global settings updated')
-    if (isSupabaseConfigured) {
-      try { await db.saveSiteSettings(settings) } catch (e) { console.error('Supabase settings error:', e) }
-    }
-  },
-  updateSubmission: async (id, patch) => {
-    set((state) => ({
-      submissions: state.submissions.map((item) => (item.id === id ? { ...item, ...patch } : item)),
-    }))
-    if (isSupabaseConfigured && patch.status) {
-      try { await db.updateSubmissionStatus(id, patch.status) } catch (e) { console.error('Supabase submission error:', e) }
-    }
-  },
-  // Load all data from Supabase
-  loadFromSupabase: async () => {
-    if (!isSupabaseConfigured) { set({ _loaded: true }); return }
-    try {
-      const [portfolio, videos, tierData, submissions, siteContent] = await Promise.allSettled([
-        db.fetchPortfolio(),
-        db.fetchVideos(),
-        db.fetchTiers(),
-        db.fetchSubmissions(),
-        db.fetchSiteContent(),
-      ])
-      const patch = { _loaded: true }
-      if (portfolio.status === 'fulfilled' && portfolio.value.length) patch.portfolio = portfolio.value
-      if (videos.status === 'fulfilled' && videos.value.length) patch.videos = videos.value
-      if (tierData.status === 'fulfilled' && tierData.value.length) patch.tiers = tierData.value
-      if (submissions.status === 'fulfilled' && submissions.value.length) patch.submissions = submissions.value
-      if (siteContent.status === 'fulfilled' && Object.keys(siteContent.value).length) {
-        const sc = siteContent.value
-        patch.hero = {
-          ...get().hero,
-          primary: sc.hero_line_1 || get().hero.primary,
-          secondary: sc.hero_line_2 || get().hero.secondary,
-          subtext: sc.hero_subtext || get().hero.subtext,
-          background_video_url: sc.hero_video_url || '',
-          about_heading: sc.about_heading || get().hero.about_heading,
-          about_body: sc.about_body || get().hero.about_body,
-          footer_tagline: sc.footer_tagline || get().hero.footer_tagline,
-          instagram_handle: sc.instagram_handle || get().hero.instagram_handle,
-          marquee_text: sc.marquee_text || get().hero.marquee_text,
-        }
-      }
-      set(patch)
-    } catch (e) {
-      console.error('Failed to load Supabase data:', e)
-      set({ _loaded: true })
-    }
-  },
-}))
+import { useCmsStore, accent, logo } from './lib/store'
 
 const nav = [
   { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
@@ -554,7 +176,7 @@ function Login({ onLogin }) {
     try {
       if (isSupabaseConfigured) {
         const { data, error: authError } = await supabase.auth.signInWithPassword(values)
-        if (authError || data?.user?.email !== adminEmail) throw authError || new Error('Admin email not allowlisted')
+        if (authError) throw authError
         onLogin(data.user)
       } else {
         if (values.email !== adminEmail || values.password.length < 6) throw new Error('Invalid local demo credentials')
@@ -799,12 +421,37 @@ function ContentManager({ type }) {
     return matchCategory && matchQuery
   })
 
+  const handleAdd = () => {
+    if (type === 'videos') {
+      // Videos use the simplified VideoAddModal
+      setEditing('__video_add__')
+      return
+    }
+    setEditing({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+      title: '',
+      category: 'Film',
+      tier: 'Studio',
+      thumbnail: '',
+      video_url: '',
+      description: '',
+      tags: '',
+      duration: '',
+      views: '',
+      is_featured: false,
+      is_visible: true,
+      autoplay_preview: true,
+      created_at: new Date().toISOString(),
+      sort_order: 99,
+    })
+  }
+
   return (
     <PageGrid>
       <GlassPanel>
         <SectionTitle
           title={title}
-          action={<JellyButton icon={Plus} onClick={() => setEditing({})}>Add {type === 'portfolio' ? 'Item' : 'Video'}</JellyButton>}
+          action={<JellyButton icon={Plus} onClick={handleAdd}>Add {type === 'portfolio' ? 'Item' : 'Video'}</JellyButton>}
         />
         <div className="grid gap-3 md:grid-cols-[1fr_220px]">
           <div className="relative">
@@ -853,31 +500,60 @@ function ContentManager({ type }) {
           </div>
         </SortableContext>
       </DndContext>
-      <EditorModal type={type} item={editing} onClose={() => setEditing(null)} onSave={(item) => { upsert(key, item, title); setEditing(null); toast.success(`${title} saved`) }} />
+      {type === 'videos' ? (
+        <VideoAddModal
+          open={editing === '__video_add__'}
+          onClose={() => setEditing(null)}
+          onSave={(item) => { upsert(key, item, title); setEditing(null); toast.success('Video added') }}
+        />
+      ) : null}
+      {type === 'videos' && editing && editing !== '__video_add__' ? (
+        <VideoEditModal item={editing} onClose={() => setEditing(null)} onSave={(item) => { upsert(key, item, title); setEditing(null); toast.success('Video updated') }} />
+      ) : null}
+      {type !== 'videos' ? (
+        <EditorModal type={type} item={editing} onClose={() => setEditing(null)} onSave={(item) => { upsert(key, item, title); setEditing(null); toast.success(`${title} saved`) }} />
+      ) : null}
     </PageGrid>
   )
 }
 
 function EditorModal({ type, item, onClose, onSave }) {
   const isVideo = type === 'videos'
-  const { register, handleSubmit, control } = useForm({
-    values: {
-      id: item?.id || crypto.randomUUID(),
-      title: item?.title || '',
-      category: item?.category || (isVideo ? 'Brand' : 'Film'),
-      tier: item?.tier || 'Studio',
-      thumbnail: item?.thumbnail || '',
-      video_url: item?.video_url || '',
-      description: item?.description || '',
-      tags: item?.tags || '',
-      duration: item?.duration || '',
-      views: item?.views || '',
-      is_featured: item?.is_featured || false,
-      is_visible: item?.is_visible ?? true,
-      created_at: item?.created_at || now,
-      sort_order: item?.sort_order || 99,
-    },
-  })
+  const { register, handleSubmit, control, reset, setValue } = useForm()
+  const thumbInputRef = useRef(null)
+  const [uploadingThumb, setUploadingThumb] = useState(false)
+
+  const handleThumbUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingThumb(true)
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'bhakty_uploads')
+
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dtse6exar'}/image/upload`, {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json()
+      if (data.error) throw new Error(data.error.message)
+      setValue('thumbnail', data.secure_url, { shouldDirty: true })
+      toast.success('Thumbnail uploaded!')
+    } catch (err) {
+      console.error(err)
+      toast.error('Upload failed.')
+    } finally {
+      setUploadingThumb(false)
+      if (thumbInputRef.current) thumbInputRef.current.value = ''
+    }
+  }
+
+  useEffect(() => {
+    if (item) {
+      reset(item)
+    }
+  }, [item, reset])
   const preview = useWatch({ control })
   return (
     <Modal title={item?.title ? `Edit ${item.title}` : `Add ${isVideo ? 'Video' : 'Portfolio Item'}`} open={!!item} onClose={onClose}>
@@ -896,7 +572,13 @@ function EditorModal({ type, item, onClose, onSave }) {
               </select>
             </Field>
           </div>
-          <Field label="Thumbnail Image URL"><input className={inputClass()} {...register('thumbnail')} /></Field>
+          <div className="grid gap-4 md:grid-cols-[1fr_auto]">
+            <Field label="Thumbnail Image URL"><input className={inputClass()} {...register('thumbnail')} /></Field>
+            <div className="pt-7">
+              <JellyButton type="button" icon={UploadCloud} onClick={() => thumbInputRef.current?.click()} disabled={uploadingThumb}>{uploadingThumb ? '...' : 'Upload'}</JellyButton>
+              <input type="file" ref={thumbInputRef} className="hidden" onChange={handleThumbUpload} accept="image/*" />
+            </div>
+          </div>
           <Field label="Video URL"><input className={inputClass()} {...register('video_url')} /></Field>
           {isVideo ? (
             <div className="grid gap-4 md:grid-cols-2">
@@ -908,9 +590,10 @@ function EditorModal({ type, item, onClose, onSave }) {
             <textarea className={inputClass('min-h-28 resize-none')} {...register('description')} />
           </Field>
           <Field label="Tags"><input className={inputClass()} {...register('tags')} /></Field>
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-3 md:grid-cols-3">
             <label className="flex items-center gap-3 rounded-2xl border border-white/10 p-4 font-body text-sm"><input type="checkbox" {...register('is_featured')} /> Featured</label>
             <label className="flex items-center gap-3 rounded-2xl border border-white/10 p-4 font-body text-sm"><input type="checkbox" {...register('is_visible')} /> Public Visible</label>
+            <label className="flex items-center gap-3 rounded-2xl border border-cyan/20 bg-cyan/5 p-4 font-body text-sm text-cyan"><input type="checkbox" {...register('autoplay_preview')} /> Autoplay Video Preview</label>
           </div>
           <JellyButton type="submit" icon={Save}>Save</JellyButton>
         </div>
@@ -930,6 +613,178 @@ function EditorModal({ type, item, onClose, onSave }) {
   )
 }
 
+/* ── Video URL Helpers ─────────────────────────── */
+function parseVideoUrl(url) {
+  if (!url) return null
+  // YouTube: youtube.com/watch?v=ID, youtu.be/ID, youtube.com/shorts/ID, youtube.com/embed/ID
+  let m = url.match(/(?:youtube\.com\/(?:watch\?.*v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/)
+  if (m) return { platform: 'youtube', id: m[1], thumbnail: `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg`, embedUrl: `https://www.youtube.com/embed/${m[1]}?autoplay=1&mute=1&loop=1&controls=0&playlist=${m[1]}&playsinline=1` }
+  // Vimeo: vimeo.com/ID
+  m = url.match(/vimeo\.com\/(\d+)/)
+  if (m) return { platform: 'vimeo', id: m[1], thumbnail: null, embedUrl: `https://player.vimeo.com/video/${m[1]}?autoplay=1&muted=1&loop=1&background=1` }
+  // Instagram Reel
+  m = url.match(/instagram\.com\/(?:reel|p)\/([\w-]+)/)
+  if (m) return { platform: 'instagram', id: m[1], thumbnail: null, embedUrl: null }
+  return { platform: 'other', id: null, thumbnail: null, embedUrl: null }
+}
+
+async function fetchVimeoThumb(id) {
+  try {
+    const res = await fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${id}`)
+    const data = await res.json()
+    return data.thumbnail_url || null
+  } catch { return null }
+}
+
+function VideoAddModal({ open, onClose, onSave }) {
+  const [url, setUrl] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [preview, setPreview] = useState(null)
+
+  const handleFetch = async () => {
+    if (!url.trim()) { toast.error('Paste a video URL first'); return }
+    setLoading(true)
+    const parsed = parseVideoUrl(url.trim())
+    if (!parsed) { toast.error('Could not parse that URL'); setLoading(false); return }
+
+    let thumb = parsed.thumbnail
+    let title = ''
+
+    // For YouTube, try to get the title via noembed
+    if (parsed.platform === 'youtube') {
+      try {
+        const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${parsed.id}`)
+        const data = await res.json()
+        if (data.title) title = data.title
+        if (!thumb && data.thumbnail_url) thumb = data.thumbnail_url
+      } catch { /* ignore */ }
+    }
+
+    // For Vimeo, fetch thumbnail and title via oembed
+    if (parsed.platform === 'vimeo') {
+      try {
+        const res = await fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${parsed.id}`)
+        const data = await res.json()
+        thumb = data.thumbnail_url || null
+        title = data.title || ''
+      } catch { /* ignore */ }
+    }
+
+    setPreview({ ...parsed, thumbnail: thumb, title, originalUrl: url.trim() })
+    setLoading(false)
+  }
+
+  const handleSave = () => {
+    if (!preview) return
+    onSave({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+      title: preview.title || `${preview.platform} video`,
+      category: preview.platform === 'youtube' ? 'YouTube' : preview.platform === 'vimeo' ? 'Vimeo' : 'Other',
+      tier: 'Studio',
+      thumbnail: preview.thumbnail || '',
+      video_url: preview.originalUrl,
+      embed_url: preview.embedUrl || '',
+      platform: preview.platform,
+      description: '',
+      tags: preview.platform,
+      duration: '',
+      views: '',
+      is_featured: false,
+      is_visible: true,
+      created_at: new Date().toISOString(),
+      sort_order: 99,
+    })
+    setUrl('')
+    setPreview(null)
+  }
+
+  const handleClose = () => { setUrl(''); setPreview(null); onClose() }
+
+  return (
+    <Modal title="Add Video" open={open} onClose={handleClose}>
+      <div className="grid gap-5">
+        <Field label="Paste Video URL (YouTube, Vimeo, Instagram)">
+          <div className="flex gap-3">
+            <input
+              className={inputClass('flex-1')}
+              placeholder="https://www.youtube.com/watch?v=..."
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleFetch())}
+            />
+            <JellyButton icon={Search} onClick={handleFetch} disabled={loading}>
+              {loading ? 'Fetching...' : 'Fetch'}
+            </JellyButton>
+          </div>
+        </Field>
+
+        {preview && (
+          <div className="glass overflow-hidden rounded-2xl">
+            {preview.thumbnail ? (
+              <img src={preview.thumbnail} alt="" className="aspect-video w-full object-cover" />
+            ) : (
+              <div className="grid aspect-video place-items-center bg-white/5 text-white/30 font-body text-sm">
+                No thumbnail available — it will still work on the site
+              </div>
+            )}
+            <div className="p-5">
+              <div className="flex items-center gap-3">
+                <span className="rounded-full border border-cyan/30 bg-cyan/10 px-3 py-1 font-body text-[10px] font-bold uppercase tracking-[0.18em] text-cyan">{preview.platform}</span>
+                <h3 className="font-heading text-lg font-bold">{preview.title || 'Untitled'}</h3>
+              </div>
+              <p className="mt-2 font-body text-xs text-white/40 break-all">{preview.originalUrl}</p>
+              <JellyButton icon={Plus} className="mt-4 w-full" onClick={handleSave}>Add to Gallery</JellyButton>
+            </div>
+          </div>
+        )}
+
+        {!preview && !loading && (
+          <div className="glass rounded-2xl p-8 text-center">
+            <Film className="mx-auto h-12 w-12 text-white/20" />
+            <p className="mt-4 font-body text-sm text-white/40">Paste a YouTube, Vimeo, or Instagram URL and click Fetch</p>
+            <p className="mt-2 font-body text-xs text-white/25">We'll automatically grab the thumbnail and title for you</p>
+          </div>
+        )}
+      </div>
+    </Modal>
+  )
+}
+
+function VideoEditModal({ item, onClose, onSave }) {
+  const { register, handleSubmit, reset } = useForm()
+
+  useEffect(() => {
+    if (item && typeof item === 'object') reset(item)
+  }, [item, reset])
+
+  return (
+    <Modal title={`Edit: ${item?.title || 'Video'}`} open={!!item && typeof item === 'object'} onClose={onClose}>
+      <form onSubmit={handleSubmit(onSave)} className="grid gap-4">
+        <Field label="Title"><input className={inputClass()} {...register('title')} /></Field>
+        <Field label="Video URL"><input className={inputClass()} {...register('video_url')} /></Field>
+        <Field label="Thumbnail URL"><input className={inputClass()} {...register('thumbnail')} /></Field>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="Category">
+            <select className={inputClass()} {...register('category')}>
+              {['YouTube', 'Vimeo', 'Instagram', 'Brand', 'Other'].map((v) => <option key={v}>{v}</option>)}
+            </select>
+          </Field>
+          <Field label="Grade Tier">
+            <select className={inputClass()} {...register('tier')}>
+              {['Content', 'Studio', 'Cinema'].map((v) => <option key={v}>{v}</option>)}
+            </select>
+          </Field>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2">
+          <label className="flex items-center gap-3 rounded-2xl border border-white/10 p-4 font-body text-sm"><input type="checkbox" {...register('is_featured')} /> Featured</label>
+          <label className="flex items-center gap-3 rounded-2xl border border-white/10 p-4 font-body text-sm"><input type="checkbox" {...register('is_visible')} /> Visible</label>
+        </div>
+        <JellyButton type="submit" icon={Save}>Save Changes</JellyButton>
+      </form>
+    </Modal>
+  )
+}
+
 function ImageManager() {
   const media = useCmsStore((s) => s.media)
   const upsert = useCmsStore((s) => s.upsertItem)
@@ -937,23 +792,55 @@ function ImageManager() {
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState(null)
   const filtered = media.filter((item) => `${item.filename} ${item.tags} ${item.used_in}`.toLowerCase().includes(query.toLowerCase()))
-  const addMock = () => {
-    upsert('media', {
-      id: crypto.randomUUID(),
-      filename: 'cloudinary-upload-placeholder.jpg',
-      url: 'https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80',
-      dimensions: '1200 x 800',
-      size: '< 200 KB',
-      used_in: 'Unassigned',
-      tags: 'uploaded, cloudinary',
-      uploaded_at: new Date().toISOString(),
-    }, 'Media')
-    toast.success('Media asset added. Connect Cloudinary env vars for real uploads.')
+  const fileInputRef = useRef(null)
+  const [uploading, setUploading] = useState(false)
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'bhakty_uploads')
+
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dtse6exar'}/image/upload`, {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json()
+      if (data.error) throw new Error(data.error.message)
+
+      upsert('media', {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+        filename: data.original_filename + '.' + data.format,
+        url: data.secure_url,
+        dimensions: `${data.width} x ${data.height}`,
+        size: (data.bytes / 1024).toFixed(1) + ' KB',
+        used_in: 'Unassigned',
+        tags: 'uploaded, cloudinary',
+        uploaded_at: new Date().toISOString(),
+      }, 'Media')
+      toast.success('Image uploaded successfully!')
+    } catch (err) {
+      console.error(err)
+      toast.error('Failed to upload image.')
+    } finally {
+      setUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
   }
   return (
     <PageGrid>
       <GlassPanel>
-        <SectionTitle title="Image Manager" action={<JellyButton icon={UploadCloud} onClick={addMock}>Upload</JellyButton>} />
+        <SectionTitle title="Image Manager" action={
+          <>
+            <JellyButton icon={UploadCloud} onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+              {uploading ? 'Uploading...' : 'Upload Image'}
+            </JellyButton>
+            <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileChange} accept="image/*" />
+          </>
+        } />
         <input className={inputClass()} placeholder="Search filename or tag..." value={query} onChange={(e) => setQuery(e.target.value)} />
       </GlassPanel>
       <div className="columns-1 gap-5 md:columns-2 xl:columns-3">
@@ -1271,12 +1158,12 @@ function AppInner() {
   useEffect(() => {
     if (!isAdminRoute || !isSupabaseConfigured) return
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user?.email === adminEmail) {
+      if (session?.user) {
         setUser(session.user)
       }
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user?.email === adminEmail) {
+      if (session?.user) {
         setUser(session.user)
       } else if (!session) {
         setUser(null)
@@ -1285,12 +1172,12 @@ function AppInner() {
     return () => subscription?.unsubscribe()
   }, [isAdminRoute])
 
-  // Load CMS data from Supabase when admin is logged in
+  // Load CMS data from Supabase for all visitors
   useEffect(() => {
-    if (user && !loaded) {
+    if (!loaded) {
       loadFromSupabase()
     }
-  }, [user, loaded, loadFromSupabase])
+  }, [loaded, loadFromSupabase])
 
   const pageMap = {
     dashboard: <Dashboard />,

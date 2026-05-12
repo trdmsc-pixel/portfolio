@@ -23,193 +23,10 @@ import { isSupabaseConfigured, supabase } from './lib/supabase'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const logo = '/brand/bhakty-studio-logo.png'
-
-const colors = {
-  cyan: '#00F5FF',
-  violet: '#9B59FF',
-  magenta: '#FF2D9B',
-  gold: '#FFB800',
-  green: '#00FF88',
-}
-
-const defaultSettings = {
-  site_title: 'bhakti.studio',
-  meta_description: 'Premium AI filmmaking and content creation studio.',
-  agency_email: 'hello@bhakty.studio',
-  phone: '+91 99581 94155',
-  instagram_handle: '@notshaam',
-  whatsapp_number: '+91 99581 94155',
-  maintenance_mode: false,
-}
-
-const tiers = [
-  {
-    id: 'content',
-    icon: Zap,
-    name: 'Content Grade',
-    badge: '',
-    color: colors.cyan,
-    tagline: 'Scroll-stopping content, AI-powered.',
-    description:
-      'Built for brands and creators who need high-quality digital content fast. Content Grade delivers polished, AI-generated social media videos, UGC-style ads, reels, and short-form content that converts.',
-    features: [
-      'AI-generated social media videos',
-      'UGC-style & influencer-format videos',
-      'Instagram Reels & YouTube Shorts',
-      'Product teaser ads',
-      'AI voiceover & music sync',
-      'Up to 2-minute video duration',
-      '2-3 revision rounds',
-      'Fast turnaround',
-    ],
-    price: 'From ₹10,000 / video',
-    note: 'Bulk discount: 20%+ off on 10+ videos',
-    cta: 'Book Content Grade',
-  },
-  {
-    id: 'studio',
-    icon: Clapperboard,
-    name: 'Studio Grade',
-    badge: 'MOST POPULAR',
-    color: colors.violet,
-    tagline: 'Stories that earn their screen time.',
-    description:
-      'For creators and brands ready to go beyond the scroll. Studio Grade delivers short films, YouTube narratives, high-production ads, and storytelling content with professional-grade cinematics.',
-    features: [
-      'Short films and narrative content',
-      'YouTube explainer & storytelling videos',
-      'Studio-grade brand advertisements',
-      'YouTube series & episodic content',
-      'AI + live-action hybrid production',
-      'Professional color grading & sound design',
-      '5-20 minute content range',
-      'Character development & script support',
-      '4-5 revision rounds',
-      'Dedicated creative producer assigned',
-    ],
-    price: 'From ₹35,000 / project',
-    note: 'Custom quotes available for series and campaigns',
-    cta: 'Book Studio Grade',
-  },
-  {
-    id: 'cinema',
-    icon: Crown,
-    name: 'Cinema Grade',
-    badge: 'PREMIUM',
-    color: colors.gold,
-    tagline: 'Pure cinema. No compromises.',
-    description:
-      "The pinnacle of bhakti.studio's craft. Cinema Grade is for those who demand the extraordinary: AI films, generated actors, immersive worlds, and commercial productions that blur imagination and reality.",
-    features: [
-      'Full-length AI feature films',
-      'AI-generated actors, characters & worlds',
-      'Cinematic brand campaigns & premium ads',
-      'Immersive storytelling & world-building',
-      'Advanced AI visual effects & compositing',
-      'Professional-grade social media production',
-      'Unlimited duration - shorts to features',
-      'Custom AI model training for characters',
-      'Unlimited revisions',
-      'White-glove production management',
-      'Premiere-ready deliverables',
-    ],
-    price: 'From ₹1,00,000 / project',
-    note: 'Bespoke pricing for feature-length productions',
-    cta: 'Book Cinema Grade',
-  },
-]
-
-const pricing = {
-  content: [
-    ['Social Media Reel / Short Ad', 'up to 60 sec', '₹10,000'],
-    ['Extended Social Video', '1-2 min', '₹15,000'],
-    ['UGC-style Series', '3 videos', '₹25,000'],
-    ['AI Product Teaser Pack', '5 videos', '₹40,000'],
-    ['Monthly Social Media Package', '8 videos/month', '₹65,000'],
-  ],
-  studio: [
-    ['YouTube Explainer Video', '5-10 min', '₹35,000'],
-    ['Brand Advertisement', '60-90 sec', '₹45,000'],
-    ['Short Film / YouTube Story', 'up to 15 min', '₹60,000'],
-    ['Episodic YouTube Series', 'per episode', '₹50,000'],
-    ['Full Brand Campaign', '3 videos + strategy', '₹1,20,000'],
-  ],
-  cinema: [
-    ['Premium Brand Film', '2-5 min cinematic', '₹1,00,000'],
-    ['AI Short Film with Custom Characters', 'up to 30 min', '₹2,50,000'],
-    ['Full-Length AI Feature Film', '60-120 min', 'Custom Quote'],
-    ['Cinematic Ad Campaign', 'multi-platform', '₹1,50,000+'],
-    ['Annual Cinema Retainer', 'unlimited content', 'Custom Quote'],
-  ],
-}
-
-const workItems = [
-  {
-    title: 'AI Mythic Film',
-    caption: 'A devotional cinematic universe designed frame by frame.',
-    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1100&q=80',
-    type: 'Cinema',
-  },
-  {
-    title: 'Neon Brand Ad',
-    caption: 'High-voltage product film for a social-first launch.',
-    image: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1100&q=80',
-    type: 'Ad',
-  },
-  {
-    title: 'Character World',
-    caption: 'AI characters, story arcs, and visual continuity.',
-    image: 'https://images.unsplash.com/photo-1518929458119-e5bf444c30f4?auto=format&fit=crop&w=1100&q=80',
-    type: 'AI Film',
-  },
-  {
-    title: 'Music Visualizer',
-    caption: 'Sound-reactive visuals for an artist campaign.',
-    image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1100&q=80',
-    type: 'Reel',
-  },
-  {
-    title: 'Studio Story',
-    caption: 'A short film language built for YouTube retention.',
-    image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1100&q=80',
-    type: 'Short Film',
-  },
-  {
-    title: 'Social Heat Pack',
-    caption: 'Batched UGC-style content with cinematic finishing.',
-    image: 'https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1100&q=80',
-    type: 'UGC',
-  },
-]
+import { useCmsStore, logo } from './lib/store'
 
 function scrollToId(id) {
   document.querySelector(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-}
-
-function useSiteSettings() {
-  const [settings, setSettings] = useState(defaultSettings)
-
-  useEffect(() => {
-    let cancelled = false
-    async function load() {
-      if (!isSupabaseConfigured) return
-      const { data, error } = await supabase
-        .from('site_settings')
-        .select('*')
-        .limit(1)
-        .maybeSingle()
-      if (!cancelled && !error && data) {
-        setSettings({ ...defaultSettings, ...data })
-      }
-    }
-    load()
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  return settings
 }
 
 function LiquidButton({ children, onClick, href, className = '', type = 'button' }) {
@@ -333,10 +150,12 @@ function Nav({ settings }) {
 }
 
 function Hero() {
-  const letters = "WE DON'T JUST CREATE CONTENT.".split('')
+  const hero = useCmsStore((s) => s.hero)
+  const letters = (hero.primary || "WE DON'T JUST CREATE CONTENT.").split('')
   return (
     <section id="home" className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-5 pt-28 text-center">
       <video className="absolute inset-0 h-full w-full object-cover opacity-35" autoPlay muted loop playsInline poster="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1800&q=80">
+        {hero.background_video_url && <source src={hero.background_video_url} type="video/mp4" />}
       </video>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,245,255,.16),transparent_32%),linear-gradient(rgba(0,0,0,.72),rgba(0,0,0,.92))]" />
       <div className="pointer-events-none absolute inset-0 public-stars" />
@@ -350,14 +169,14 @@ function Hero() {
           ))}
         </h1>
         <motion.h2 className="mt-3 font-heading text-[clamp(2.6rem,7vw,7.4rem)] font-black leading-[0.92] text-gradient-rainbow" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}>
-          WE BUILD CINEMATIC WORLDS.
+          {hero.secondary || 'WE BUILD CINEMATIC WORLDS.'}
         </motion.h2>
         <motion.p className="mx-auto mt-7 max-w-3xl font-body text-base leading-relaxed text-white/62 md:text-xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.15 }}>
-          AI Films · Advertisements · Short Films · Social Media · Cinema — crafted at bhakti.studio
+          {hero.subtext || 'AI Films · Advertisements · Short Films · Social Media · Cinema — crafted at bhakti.studio'}
         </motion.p>
         <motion.div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row" initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.28 }}>
-          <LiquidButton onClick={() => scrollToId('#work')}><Play size={17} /> Explore Our Work</LiquidButton>
-          <LiquidButton onClick={() => scrollToId('#contact')} className="!bg-black/30"><Sparkles size={17} /> Book Your Package</LiquidButton>
+          <LiquidButton onClick={() => scrollToId(hero.cta2_target || '#portfolio')}><Play size={17} /> {hero.cta2_label || 'View Work'}</LiquidButton>
+          <LiquidButton onClick={() => scrollToId(hero.cta1_target || '#contact')} className="!bg-black/30"><Sparkles size={17} /> {hero.cta1_label || 'Start a Project'}</LiquidButton>
         </motion.div>
       </motion.div>
       <button onClick={() => scrollToId('#about')} className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-white/45">
@@ -369,6 +188,7 @@ function Hero() {
 }
 
 function AboutIntro() {
+  const hero = useCmsStore((s) => s.hero)
   return (
     <section id="about" className="public-section px-5 py-24 md:py-36">
       <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
@@ -377,9 +197,9 @@ function AboutIntro() {
         </div>
         <div>
           <SectionKicker>Who We Are</SectionKicker>
-          <h2 className="section-heading">NEXT-GEN CREATIVE POWERHOUSE.</h2>
+          <h2 className="section-heading">{hero.about_heading || 'NEXT-GEN CREATIVE POWERHOUSE.'}</h2>
           <p className="mt-6 font-body text-lg leading-8 text-white/60">
-            bhakti.studio is a next-generation creative powerhouse at the intersection of artificial intelligence and cinematic storytelling. We fuse AI technology with human artistic vision to produce content that does not just get watched — it gets felt. From 30-second social media reels to full-length cinematic features, every frame we craft is intentional, immersive, and unforgettable.
+            {hero.about_body || 'bhakti.studio is a next-generation creative powerhouse at the intersection of artificial intelligence and cinematic storytelling. We fuse AI technology with human artistic vision to produce content that does not just get watched — it gets felt.'}
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {[
@@ -404,7 +224,6 @@ function SectionKicker({ children }) {
 }
 
 function TierCard({ tier }) {
-  const Icon = tier.icon
   const tiltRef = useRef(null)
   const move = (event) => {
     const el = tiltRef.current
@@ -417,42 +236,50 @@ function TierCard({ tier }) {
   const leave = () => {
     if (tiltRef.current) tiltRef.current.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)'
   }
+  const Icon = tier.id === 'content' ? Zap : tier.id === 'studio' ? Clapperboard : Crown
+
+  if (!tier.is_visible) return null
+
   return (
-    <div ref={tiltRef} onMouseMove={move} onMouseLeave={leave} className="tier-card glass rounded-[2rem] p-6 transition duration-300" style={{ '--tier-color': tier.color }}>
+    <div ref={tiltRef} onMouseMove={move} onMouseLeave={leave} className="tier-card glass rounded-[2rem] p-6 transition duration-300" style={{ '--tier-color': tier.accent_color }}>
       <div className="mb-6 flex items-center justify-between">
-        <div className="grid h-14 w-14 place-items-center rounded-2xl border border-white/10 bg-white/5" style={{ color: tier.color }}>
+        <div className="grid h-14 w-14 place-items-center rounded-2xl border border-white/10 bg-white/5" style={{ color: tier.accent_color }}>
           <Icon />
         </div>
         {tier.badge ? <div className="rounded-full border border-white/10 px-3 py-1 font-body text-[10px] font-black uppercase tracking-[0.18em] text-ember"><Star size={12} className="mr-1 inline" />{tier.badge}</div> : null}
       </div>
-      <h3 className="font-heading text-4xl font-black uppercase" style={{ color: tier.color }}>{tier.name}</h3>
+      <h3 className="font-heading text-4xl font-black uppercase" style={{ color: tier.accent_color }}>{tier.name}</h3>
       <p className="mt-3 font-body text-sm font-bold text-white">{tier.tagline}</p>
       <p className="mt-4 min-h-28 font-body text-sm leading-6 text-white/52">{tier.description}</p>
       <ul className="mt-6 space-y-3">
-        {tier.features.map((feature) => (
-          <li key={feature} className="flex gap-3 font-body text-sm text-white/68">
-            <Check size={16} style={{ color: tier.color }} className="mt-0.5 shrink-0" />
-            {feature}
+        {(tier.features || []).filter(f => f.enabled).map((feature) => (
+          <li key={feature.id} className="flex gap-3 font-body text-sm text-white/68">
+            <Check size={16} style={{ color: tier.accent_color }} className="mt-0.5 shrink-0" />
+            {feature.text}
           </li>
         ))}
       </ul>
       <div className="mt-8 border-t border-white/10 pt-6">
-        <div className="font-heading text-2xl font-black text-white">{tier.price}</div>
-        <p className="mt-2 min-h-10 font-body text-xs text-white/38">{tier.note}</p>
-        <LiquidButton onClick={() => scrollToId('#contact')} className="mt-5 w-full" >{tier.cta} →</LiquidButton>
+        <div className="font-heading text-2xl font-black text-white">{tier.starting_price}</div>
+        <LiquidButton onClick={() => scrollToId('#contact')} className="mt-5 w-full" >{tier.cta_label || 'Book'} →</LiquidButton>
       </div>
     </div>
   )
 }
 
 function Services() {
+  const tiers = useCmsStore((s) => s.tiers)
+  const hero = useCmsStore((s) => s.hero)
+  
+  if (!tiers || tiers.length === 0) return null
+
   return (
     <section id="services" className="public-section px-5 py-24 md:py-36">
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center">
-          <SectionKicker>Choose Your Grade</SectionKicker>
+          <SectionKicker>{hero.pricing_heading || 'Choose Your Grade'}</SectionKicker>
           <h2 className="section-heading">EVERY TIER IS A UNIVERSE.</h2>
-          <p className="mt-4 font-body text-white/52">Find yours.</p>
+          <p className="mt-4 font-body text-white/52">{hero.pricing_subheading || 'Find yours.'}</p>
         </div>
         <div className="grid gap-5 xl:grid-cols-3">
           {tiers.map((tier) => <TierCard key={tier.id} tier={tier} />)}
@@ -462,63 +289,96 @@ function Services() {
   )
 }
 
+function getEmbedUrl(videoUrl) {
+  if (!videoUrl) return null
+  // YouTube
+  const ytMatch = videoUrl.match(/(?:youtube\.com\/(?:watch\?.*v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/)
+  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=1&loop=1&controls=0&playlist=${ytMatch[1]}&playsinline=1&showinfo=0&modestbranding=1&rel=0`
+  // Vimeo
+  const vmMatch = videoUrl.match(/vimeo\.com\/(\d+)/)
+  if (vmMatch) return `https://player.vimeo.com/video/${vmMatch[1]}?autoplay=1&muted=1&loop=1&background=1`
+  return null
+}
+
+function PortfolioCard({ item, index }) {
+  const hasVideo = item.video_url && item.autoplay_preview !== false
+  const embedUrl = hasVideo ? getEmbedUrl(item.video_url) : null
+
+  const handleClick = () => {
+    if (item.video_url) {
+      window.open(item.video_url, '_blank', 'noopener,noreferrer')
+    }
+  }
+
+  return (
+    <button
+      key={item.id}
+      onClick={handleClick}
+      className={`work-card glass group relative overflow-hidden rounded-[2rem] text-left ${index === 0 || index === 4 ? 'md:row-span-2' : ''}`}
+    >
+      {embedUrl ? (
+        <iframe
+          src={embedUrl}
+          className="pointer-events-none absolute inset-0 h-full w-full scale-[1.3] border-0 object-cover"
+          allow="autoplay; encrypted-media"
+          loading="lazy"
+          title={item.title}
+        />
+      ) : (
+        <img src={item.thumbnail} alt={item.title} loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-110" />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 translate-y-6 p-5 opacity-85 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+        <div className="font-body text-[10px] font-black uppercase tracking-[0.25em] text-cyan">{item.category}</div>
+        <h3 className="mt-2 font-heading text-2xl font-black text-white">{item.title}</h3>
+        <p className="mt-2 font-body text-sm text-white/55">{item.description}</p>
+        <span className="mt-4 inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 font-body text-xs font-bold uppercase tracking-[0.16em] text-white">
+          Watch <ExternalLink size={14} />
+        </span>
+      </div>
+    </button>
+  )
+}
+
 function Work() {
-  const [active, setActive] = useState(null)
+  const portfolio = useCmsStore((s) => s.portfolio)
+  const hero = useCmsStore((s) => s.hero)
+  const settings = useCmsStore((s) => s.settings)
+  
+  if (!portfolio || portfolio.length === 0) return null
+
   return (
     <section id="work" className="public-section px-5 py-24 md:py-36">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
             <SectionKicker>Our Work Speaks</SectionKicker>
-            <h2 className="section-heading">EVERY FRAME, A WORLD.</h2>
+            <h2 className="section-heading">{hero.portfolio_heading || 'EVERY FRAME, A WORLD.'}</h2>
           </div>
-          <a href="https://www.instagram.com/notshaam" target="_blank" rel="noreferrer" className="glass flex w-fit items-center gap-3 rounded-2xl px-4 py-3 font-body text-xs font-black uppercase tracking-[0.18em] text-magenta">
-            <Camera size={18} /> @notshaam — Follow Us <ExternalLink size={14} />
+          <a href={`https://www.instagram.com/${settings.instagram_handle?.replace('@', '') || 'notshaam'}`} target="_blank" rel="noreferrer" className="glass flex w-fit items-center gap-3 rounded-2xl px-4 py-3 font-body text-xs font-black uppercase tracking-[0.18em] text-magenta">
+            <Camera size={18} /> {settings.instagram_handle || '@notshaam'} — Follow Us <ExternalLink size={14} />
           </a>
         </div>
         <div className="grid auto-rows-[260px] gap-5 md:grid-cols-3">
-          {workItems.map((item, index) => (
-            <button key={item.title} onClick={() => setActive(item)} className={`work-card glass group relative overflow-hidden rounded-[2rem] text-left ${index === 0 || index === 4 ? 'md:row-span-2' : ''}`}>
-              <img src={item.image} alt={item.title} loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 translate-y-6 p-5 opacity-85 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                <div className="font-body text-[10px] font-black uppercase tracking-[0.25em] text-cyan">{item.type}</div>
-                <h3 className="mt-2 font-heading text-2xl font-black text-white">{item.title}</h3>
-                <p className="mt-2 font-body text-sm text-white/55">{item.caption}</p>
-                <span className="mt-4 inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 font-body text-xs font-bold uppercase tracking-[0.16em] text-white">Watch <Play size={14} /></span>
-              </div>
-            </button>
+          {portfolio.filter(p => p.is_visible).map((item, index) => (
+            <PortfolioCard key={item.id} item={item} index={index} />
           ))}
         </div>
         <div className="marquee glass mt-10 overflow-hidden rounded-2xl py-4">
-          <div>AI FILMS · ADVERTISEMENTS · SHORT FILMS · REELS · BRAND VIDEOS · CINEMATIC CONTENT · SOCIAL MEDIA ADS · UGC · STORYTELLING ·&nbsp;</div>
+          <div>{hero.marquee_text || 'AI FILMS · ADVERTISEMENTS · SHORT FILMS · REELS · BRAND VIDEOS · CINEMATIC CONTENT · SOCIAL MEDIA ADS · UGC · STORYTELLING ·'}&nbsp;</div>
         </div>
       </div>
-      <ModalWork item={active} onClose={() => setActive(null)} />
     </section>
   )
 }
 
-function ModalWork({ item, onClose }) {
-  return (
-    <AnimatePresence>
-      {item ? (
-        <motion.div className="fixed inset-0 z-[70] grid place-items-center bg-black/75 p-5 backdrop-blur-2xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <motion.div className="glass max-w-5xl overflow-hidden rounded-[2rem]" initial={{ scale: 0.92, y: 30 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96, y: 20 }}>
-            <button onClick={onClose} className="absolute right-6 top-6 z-10 rounded-full bg-black/60 p-3 text-white"><X /></button>
-            <img src={item.image} alt="" className="max-h-[70vh] w-full object-cover" />
-            <div className="p-6">
-              <h3 className="font-heading text-3xl font-black">{item.title}</h3>
-              <p className="mt-2 font-body text-white/55">{item.caption}</p>
-            </div>
-          </motion.div>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
-  )
-}
 
 function Pricing() {
+  const tiers = useCmsStore((s) => s.tiers)
+  const pricing = useCmsStore((s) => s.pricing)
+  
+  if (!tiers || tiers.length === 0 || !pricing) return null
+
   return (
     <section id="pricing" className="public-section px-5 py-24 md:py-36">
       <div className="mx-auto max-w-7xl">
@@ -528,28 +388,33 @@ function Pricing() {
           <p className="mt-4 font-body text-white/52">Just pure creative value.</p>
         </div>
         <div className="grid gap-5 lg:grid-cols-3">
-          {tiers.map((tier) => (
-            <div key={tier.id} className="glass rounded-[2rem] p-6" style={{ boxShadow: `0 0 42px ${tier.color}18` }}>
-              <h3 className="font-heading text-3xl font-black" style={{ color: tier.color }}>{tier.name}</h3>
+          {tiers.filter(t => t.is_visible).map((tier) => (
+            <div key={tier.id} className="glass rounded-[2rem] p-6" style={{ boxShadow: `0 0 42px ${tier.accent_color}18` }}>
+              <h3 className="font-heading text-3xl font-black" style={{ color: tier.accent_color }}>{tier.name}</h3>
+              {pricing[tier.id]?.note && <p className="mt-2 font-body text-sm text-white/55">{pricing[tier.id].note}</p>}
               <div className="mt-6 space-y-4">
-                {pricing[tier.id].map(([name, desc, price]) => (
-                  <div key={name} className="border-b border-white/10 pb-4">
+                {(pricing[tier.id]?.rows || []).filter(r => r.is_visible).map((row) => (
+                  <div key={row.id} className="border-b border-white/10 pb-4">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <div className="font-body text-sm font-bold text-white">{name}</div>
-                        <div className="mt-1 font-body text-xs text-white/38">{desc}</div>
+                        <div className="font-body text-sm font-bold text-white">{row.service}</div>
+                        <div className="mt-1 font-body text-xs text-white/38">{row.description}</div>
                       </div>
-                      <div className="font-heading text-lg font-black text-white">{price}</div>
+                      <div className="text-right">
+                        <div className="font-heading text-lg font-black text-white">
+                           {typeof row.price === 'number' ? `₹${row.price.toLocaleString()}` : row.price}
+                        </div>
+                        {row.suffix && <div className="font-body text-[10px] uppercase text-white/40">{row.suffix}</div>}
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
-              {tier.id === 'content' ? <div className="mt-6 rounded-2xl border border-ember/30 bg-ember/10 p-4 font-body text-sm text-ember">Order 10+ videos and save 20% or more. Recurring clients get priority production slots.</div> : null}
             </div>
           ))}
         </div>
         <p className="glass mt-8 rounded-2xl p-5 text-center font-body text-sm text-white/52">
-          All prices are exclusive of GST. Final pricing depends on complexity, duration, and production requirements. Contact us for a custom quote.
+          {pricing.global_note || 'All prices are exclusive of GST. Final pricing depends on complexity, duration, and production requirements.'}
         </p>
       </div>
     </section>
@@ -635,6 +500,7 @@ function SiteField({ label, children, className = '' }) {
 }
 
 function FounderStory() {
+  const hero = useCmsStore((s) => s.hero)
   const tags = ['AI Filmmaking', 'Video Editing', 'Motion Design', 'Brand Storytelling', 'Cinematography', 'AI Animation', 'Sound Design', 'Social Media Strategy', 'Character Creation', 'World-Building']
   return (
     <section className="public-section px-5 py-24 md:py-36">
@@ -656,6 +522,7 @@ function FounderStory() {
 }
 
 function Footer({ settings }) {
+  const hero = useCmsStore((s) => s.hero)
   const links = ['Home', 'Work', 'Services', 'Pricing', 'About', 'Contact']
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-black px-5 py-12">
@@ -663,13 +530,13 @@ function Footer({ settings }) {
       <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-3">
         <div>
           <img src={logo} alt="" className="h-16 w-16 rounded-2xl object-cover logo-glow" />
-          <p className="mt-4 font-body text-sm text-white/52">Crafting cinematic worlds, one frame at a time.</p>
+          <p className="mt-4 font-body text-sm text-white/52">{hero.footer_tagline || 'Crafting cinematic worlds, one frame at a time.'}</p>
         </div>
         <div className="flex flex-wrap gap-4 md:justify-center">
           {links.map((link) => <button key={link} onClick={() => scrollToId(`#${link.toLowerCase() === 'home' ? 'home' : link.toLowerCase()}`)} className="font-body text-xs font-bold uppercase tracking-[0.18em] text-white/45 hover:text-cyan">{link}</button>)}
         </div>
         <div className="md:text-right">
-          <a href="https://www.instagram.com/notshaam" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 font-body text-sm font-bold text-magenta"><Camera size={18} /> {settings.instagram_handle || '@notshaam'}</a>
+          <a href={`https://www.instagram.com/${settings.instagram_handle?.replace('@', '') || 'notshaam'}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 font-body text-sm font-bold text-magenta"><Camera size={18} /> {settings.instagram_handle || '@notshaam'}</a>
           <p className="mt-3 font-body text-sm text-white/42">{settings.agency_email}</p>
         </div>
       </div>
@@ -681,13 +548,14 @@ function Footer({ settings }) {
 }
 
 export default function PublicSite() {
-  const settings = useSiteSettings()
+  const settings = useCmsStore((s) => s.settings)
+  const loadedStore = useCmsStore((s) => s._loaded)
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     document.title = settings.site_title || 'bhakti.studio'
     const meta = document.querySelector('meta[name="description"]')
-    if (meta) meta.setAttribute('content', settings.meta_description || defaultSettings.meta_description)
+    if (meta) meta.setAttribute('content', settings.meta_description || 'Premium AI filmmaking and content creation studio.')
   }, [settings])
 
   useEffect(() => {
