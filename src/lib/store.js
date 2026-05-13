@@ -85,7 +85,7 @@ const defaults = {
       name: 'Studio Grade',
       tagline: 'Premium brand storytelling',
       description: 'A stronger creative package with advanced post-production, sharper art direction, and 4K delivery.',
-      accent_color: accent.violet,
+      accent_color: accent.studio,
       badge: 'MOST POPULAR',
       cta_label: 'Book Studio Grade',
       starting_price: 'From ₹35,000',
