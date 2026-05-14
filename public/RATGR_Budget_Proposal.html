@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radha and the Great Rescue — Production Budget Proposal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #06060f;
+  --gold: #d4a843;
+  --gold-bright: #f5c842;
+  --gold-dim: #7a5f1a;
+  --glass: rgba(255,255,255,0.04);
+  --glass-border: rgba(212,168,67,0.18);
+  --glass-hover: rgba(212,168,67,0.38);
+  --teal: #00d4c8;
+  --teal-glow: rgba(0,212,200,0.25);
+  --text: #e8e0d0;
+  --text-dim: #6a6050;
+  --red: #ff6b5b;
+  --purple: #a78bfa;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* ─── BACKGROUND ─── */
+.bg-orbs {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  overflow: hidden;
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: float 12s ease-in-out infinite;
+}
+.orb1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(212,168,67,0.07) 0%, transparent 70%);
+  top: -100px; left: -100px;
+  animation-delay: 0s;
+}
+.orb2 {
+  width: 600px; height: 400px;
+  background: radial-gradient(circle, rgba(0,180,200,0.06) 0%, transparent 70%);
+  bottom: -100px; right: -100px;
+  animation-delay: -6s;
+}
+.orb3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(120,80,200,0.05) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  animation-delay: -3s;
+}
+@keyframes float {
+  0%,100%{transform:translate(0,0);}
+  33%{transform:translate(30px,-20px);}
+  66%{transform:translate(-20px,30px);}
+}
+
+/* grain overlay */
+.grain {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  opacity: 0.25;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+}
+
+/* ─── LAYOUT ─── */
+.wrapper {
+  position: relative; z-index: 2;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 28px 100px;
+}
+
+/* ─── HERO ─── */
+.hero {
+  text-align: center;
+  padding: 90px 20px 70px;
+  position: relative;
+}
+.hero-line {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 240px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.5;
+}
+.eyebrow {
+  font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
+  color: var(--gold); opacity: 0.6; margin-bottom: 22px;
+}
+.film-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(38px, 6vw, 76px);
+  font-weight: 600; line-height: 1.05;
+  background: linear-gradient(160deg, #f5d060 0%, #d4a843 45%, #8a5e12 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 40px rgba(212,168,67,0.35));
+  margin-bottom: 10px;
+}
+.film-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(14px, 2.2vw, 18px);
+  font-style: italic; font-weight: 300;
+  color: var(--gold); opacity: 0.55; letter-spacing: 2px;
+  margin-bottom: 30px;
+}
+.doc-stamp {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 7px 22px;
+  border: 1px solid rgba(212,168,67,0.25); border-radius: 2px;
+  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--gold); opacity: 0.45;
+}
+.meta-strip {
+  display: flex; justify-content: center; flex-wrap: wrap;
+  gap: 10px 36px; margin-top: 36px;
+}
+.meta-pill {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px;
+}
+.meta-key {
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--text-dim);
+}
+.meta-val {
+  font-family: 'Cormorant Garamond', serif; font-size: 13px;
+  color: rgba(232,224,208,0.7);
+}
+
+/* ─── SECTION ─── */
+.section {
+  margin-top: 64px;
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.section.visible { opacity: 1; transform: translateY(0); }
+
+.sec-head {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 28px;
+}
+.sec-num {
+  font-size: 10px; letter-spacing: 3px; color: var(--gold); opacity: 0.4;
+}
+.sec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(18px, 2.8vw, 26px); font-weight: 600;
+  color: var(--gold-bright); letter-spacing: 0.5px;
+}
+.sec-rule {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, rgba(212,168,67,0.3), transparent);
+}
+
+/* ─── GLASS CARD ─── */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px; padding: 30px;
+  transition: border-color 0.35s, box-shadow 0.35s;
+}
+.glass:hover {
+  border-color: var(--glass-hover);
+  box-shadow: 0 0 40px rgba(212,168,67,0.07);
+}
+.body-text {
+  font-size: 14px; line-height: 1.9;
+  color: rgba(232,224,208,0.75);
+}
+.body-text em {
+  font-family: 'Cormorant Garamond', serif; font-size: 16px;
+  font-style: italic; color: var(--gold); opacity: 0.9;
+}
+.body-text strong { color: var(--text); font-weight: 500; }
+.mt-14{margin-top:14px;} .mt-20{margin-top:20px;}
+
+/* ─── TABS ─── */
+.tab-wrap {
+  display: flex; border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(212,168,67,0.2);
+  margin-bottom: 32px;
+}
+.tab-btn {
+  flex: 1; padding: 20px 16px; background: transparent; border: none;
+  cursor: pointer; text-align: center; position: relative;
+  transition: background 0.3s;
+}
+.tab-btn:not(:last-child) { border-right: 1px solid rgba(212,168,67,0.15); }
+.tab-btn.active { background: rgba(212,168,67,0.09); }
+.tab-btn.active::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--gold);
+  box-shadow: 0 0 12px rgba(212,168,67,0.8), 0 0 24px rgba(212,168,67,0.4);
+}
+.t-eyebrow {
+  display: block; font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--text-dim); margin-bottom: 5px;
+}
+.t-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(17px, 2.5vw, 22px); font-weight: 600;
+  transition: color 0.3s;
+}
+.tab-btn.active .t-name {
+  color: var(--gold-bright);
+  text-shadow: 0 0 20px rgba(245,200,66,0.5);
+}
+.tab-btn:not(.active) .t-name { color: var(--text-dim); }
+.t-amt {
+  display: block; margin-top: 4px;
+  font-family: 'Cormorant Garamond', serif; font-size: 13px;
+  transition: color 0.3s;
+}
+.tab-btn.active .t-amt { color: var(--gold); }
+.tab-btn:not(.active) .t-amt { color: var(--text-dim); }
+
+/* ─── SCENARIO PANELS ─── */
+.scenario { display: none; animation: fadeUp 0.45s ease; }
+.scenario.active { display: block; }
+@keyframes fadeUp {
+  from{opacity:0;transform:translateY(12px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ─── TOTAL BANNER ─── */
+.total-banner {
+  position: relative; overflow: hidden;
+  background: rgba(212,168,67,0.05);
+  border: 1px solid rgba(212,168,67,0.22); border-radius: 14px;
+  padding: 36px 20px; text-align: center;
+  margin-bottom: 18px;
+}
+.total-banner::before {
+  content: ''; position: absolute;
+  top: -60%; left: 50%; transform: translateX(-50%);
+  width: 500px; height: 300px;
+  background: radial-gradient(ellipse, rgba(212,168,67,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.t-lbl {
+  font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
+  color: var(--gold); opacity: 0.55; margin-bottom: 8px;
+}
+.t-total {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(44px, 8vw, 72px); font-weight: 700; line-height: 1;
+  color: var(--gold-bright);
+  filter: drop-shadow(0 0 28px rgba(245,200,66,0.55));
+}
+.t-note { font-size: 12px; color: var(--text-dim); margin-top: 10px; }
+
+/* ─── PHASE CARDS ─── */
+.phases { display: flex; flex-direction: column; gap: 10px; }
+.phase {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px; overflow: hidden;
+  transition: border-color 0.3s, transform 0.25s;
+  cursor: pointer;
+}
+.phase:hover { border-color: rgba(212,168,67,0.2); transform: translateY(-1px); }
+.phase-head {
+  display: flex; align-items: center; padding: 18px 22px;
+  gap: 14px; user-select: none;
+}
+.p-ico {
+  width: 38px; height: 38px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.p-info { flex: 1; }
+.p-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.p-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+.p-right { text-align: right; flex-shrink: 0; }
+.p-amt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 600; color: var(--gold);
+}
+.p-pct { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+.chev {
+  font-size: 10px; color: var(--gold); opacity: 0.45;
+  flex-shrink: 0; margin-left: 8px;
+  transition: transform 0.3s;
+}
+.phase.open .chev { transform: rotate(180deg); }
+.p-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.04);
+}
+.p-bar-fill {
+  height: 100%;
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+.p-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.45s ease;
+}
+.phase.open .p-body { max-height: 600px; }
+.li {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 9px 22px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  gap: 12px;
+}
+.li-name { font-size: 13px; color: rgba(232,224,208,0.65); flex: 1; }
+.li-amt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; color: var(--text); flex-shrink: 0;
+}
+
+/* phase accent colours */
+.p1 .p-ico{background:rgba(100,150,255,0.1);}
+.p1 .p-bar-fill{background:linear-gradient(90deg,#6496ff,#a0b8ff);}
+.p2 .p-ico{background:rgba(212,168,67,0.1);}
+.p2 .p-bar-fill{background:linear-gradient(90deg,#d4a843,#f5c842);}
+.p3 .p-ico{background:rgba(0,212,200,0.1);}
+.p3 .p-bar-fill{background:linear-gradient(90deg,#00d4c8,#00eadc);}
+.p4 .p-ico{background:rgba(255,107,91,0.1);}
+.p4 .p-bar-fill{background:linear-gradient(90deg,#ff6b5b,#ff9080);}
+.p5 .p-ico{background:rgba(120,80,200,0.1);}
+.p5 .p-bar-fill{background:linear-gradient(90deg,#7850c8,#a78bfa);}
+.pc .p-ico{background:rgba(120,120,120,0.08);}
+.pc .p-bar-fill{background:linear-gradient(90deg,#555,#888);}
+
+/* ─── AI SECTION ─── */
+.ai-wrap {
+  position: relative; overflow: hidden;
+  background: rgba(0,212,200,0.03);
+  border: 1px solid rgba(0,212,200,0.18); border-radius: 16px; padding: 38px;
+}
+.ai-wrap::before {
+  content: ''; position: absolute;
+  top: -80px; right: -80px;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(0,212,200,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+.ai-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 14px;
+  background: rgba(0,212,200,0.09); border: 1px solid rgba(0,212,200,0.28);
+  border-radius: 20px; font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 18px;
+}
+.ai-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(18px,2.8vw,24px); font-weight: 600;
+  color: var(--teal); margin-bottom: 16px;
+}
+.ai-tools { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0; }
+.ai-tag {
+  padding: 5px 15px;
+  background: rgba(0,212,200,0.07); border: 1px solid rgba(0,212,200,0.2);
+  border-radius: 20px; font-size: 12px; color: var(--teal); font-weight: 500;
+}
+.ai-pull {
+  background: rgba(0,212,200,0.06);
+  border-left: 3px solid var(--teal);
+  padding: 16px 20px; border-radius: 0 10px 10px 0;
+  font-size: 13px; line-height: 1.8;
+  color: rgba(232,224,208,0.78); margin-top: 18px;
+}
+
+/* ─── LEGAL SECTION ─── */
+.legal-wrap {
+  position: relative; overflow: hidden;
+  background: rgba(255,107,91,0.03);
+  border: 1px solid rgba(255,107,91,0.18); border-radius: 16px; padding: 38px;
+}
+.legal-wrap::before {
+  content: ''; position: absolute;
+  bottom: -70px; left: -70px;
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(255,107,91,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+.legal-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(18px,2.8vw,24px); font-weight: 600;
+  color: var(--red); margin-bottom: 14px;
+}
+.legal-existing {
+  background: rgba(255,107,91,0.07);
+  border: 1px solid rgba(255,107,91,0.2);
+  border-radius: 10px; padding: 16px 20px;
+  margin: 18px 0; font-size: 13px; line-height: 1.8;
+  color: rgba(232,224,208,0.8);
+}
+.legal-existing strong { color: var(--red); }
+.legal-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;
+}
+@media(max-width:620px){.legal-grid{grid-template-columns:1fr;}}
+.legal-item {
+  display: flex; gap: 12px; padding: 16px;
+  background: rgba(255,107,91,0.04);
+  border: 1px solid rgba(255,107,91,0.1); border-radius: 10px;
+}
+.l-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--red); flex-shrink: 0; margin-top: 5px;
+  box-shadow: 0 0 8px rgba(255,107,91,0.6);
+}
+.l-txt { font-size: 13px; line-height: 1.65; color: rgba(232,224,208,0.72); }
+.l-txt strong { color: var(--text); font-weight: 500; }
+
+/* ─── MARKETING NOTE ─── */
+.mkt-wrap {
+  background: rgba(120,80,200,0.03);
+  border: 1px solid rgba(120,80,200,0.2); border-radius: 16px; padding: 38px;
+}
+.mkt-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(18px,2.8vw,24px); font-weight: 600;
+  color: var(--purple); margin-bottom: 16px;
+}
+.mkt-pull {
+  background: rgba(120,80,200,0.08);
+  border-left: 3px solid var(--purple);
+  padding: 16px 20px; border-radius: 0 10px 10px 0;
+  font-size: 13px; line-height: 1.85; font-style: italic;
+  color: rgba(232,224,208,0.78); margin-top: 18px;
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-scroll { overflow-x: auto; border-radius: 14px; }
+.comp-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px; min-width: 640px;
+}
+.comp-table th {
+  padding: 16px 18px; text-align: left;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; font-weight: 600;
+  border-bottom: 1px solid rgba(212,168,67,0.2);
+}
+.comp-table th:first-child{color:var(--text-dim);}
+.comp-table th:nth-child(2){color:#7aabff;}
+.comp-table th:nth-child(3){color:var(--gold);}
+.comp-table td {
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: rgba(232,224,208,0.68); vertical-align: top; line-height: 1.6;
+}
+.comp-table td:first-child{color:var(--text);font-weight:500;width:28%;}
+.comp-table tr:hover td{background:rgba(255,255,255,0.018);}
+
+/* ─── RECOMMENDATION ─── */
+.rec-wrap {
+  position: relative; overflow: hidden;
+  background: linear-gradient(140deg, rgba(212,168,67,0.07) 0%, rgba(212,168,67,0.02) 100%);
+  border: 1px solid rgba(212,168,67,0.25); border-radius: 16px; padding: 44px;
+}
+.rec-wrap::after {
+  content: '✦'; position: absolute; top: 20px; right: 28px;
+  font-size: 56px; color: rgba(212,168,67,0.06);
+  font-family: serif; pointer-events: none; line-height: 1;
+}
+.rec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px,3.5vw,32px); font-weight: 600;
+  color: var(--gold-bright); margin-bottom: 22px;
+}
+.rec-body { font-size: 14px; line-height: 1.9; color: rgba(232,224,208,0.82); }
+.rec-body + .rec-body { margin-top: 16px; }
+.rec-box {
+  background: rgba(212,168,67,0.09);
+  border: 1px solid rgba(212,168,67,0.25); border-radius: 12px;
+  padding: 24px 26px; margin-top: 24px;
+  font-size: 14px; line-height: 1.85;
+  color: rgba(232,224,208,0.88);
+}
+.rec-big {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px,4vw,32px); font-weight: 600;
+  color: var(--gold-bright);
+  filter: drop-shadow(0 0 16px rgba(212,168,67,0.5));
+  display: block; margin: 10px 0 6px;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  text-align: center; margin-top: 70px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.foot-text {
+  font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--text-dim); opacity: 0.5; line-height: 2;
+}
+
+/* scrollbar */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(212,168,67,0.25);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+<div class="grain"></div>
+
+<div class="wrapper">
+
+<!-- ══════ HERO ══════ -->
+<header class="hero">
+  <p class="eyebrow">Production Budget Proposal &nbsp;·&nbsp; 2025</p>
+  <h1 class="film-title">Radha and the<br>Great Rescue</h1>
+  <p class="film-sub">A Feature Film by Uplifting Cinema Pvt. Ltd.</p>
+  <div class="doc-stamp">Confidential &nbsp;·&nbsp; Director's Budget Overview</div>
+  <div class="meta-strip">
+    <div class="meta-pill">
+      <span class="meta-key">Copyright</span>
+      <span class="meta-val">Uplifting Cinema Pvt. Ltd., Mumbai</span>
+    </div>
+    <div class="meta-pill">
+      <span class="meta-key">WGA Registration</span>
+      <span class="meta-val">No. 1977016</span>
+    </div>
+    <div class="meta-pill">
+      <span class="meta-key">Copyright Diary</span>
+      <span class="meta-val">2825/2019-CO/L</span>
+    </div>
+    <div class="meta-pill">
+      <span class="meta-key">Production Approach</span>
+      <span class="meta-val">AI-Hybrid Filmmaking</span>
+    </div>
+  </div>
+  <div class="hero-line"></div>
+</header>
+
+<!-- ══════ PREFACE ══════ -->
+<section class="section" id="s1">
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <h2 class="sec-title">Director's Preface</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="glass">
+    <p class="body-text">
+      Having read and studied the screenplay carefully, I want to begin by noting what this film truly is —
+      <em>a quiet, powerful, emotionally honest family story set in the heart of rural India.</em>
+      It does not need spectacle. It needs a director who understands that its power lies in Radha's eyes,
+      in the relationship between a child and her dwarf bull Aristadeva, and in the moral clarity of a
+      community protecting what it loves. That understanding shapes everything about how this film should
+      be made — and what it will cost to make it well.
+    </p>
+    <p class="body-text mt-14">
+      The approach I am proposing is a hybrid production model that combines practical on-location shooting
+      with AI-assisted post-production enhancement. Real actors. Real animals. Real locations across rural India.
+      The AI tools — Kling 3.0, Seedance 2.0, and Higgsfield — are deployed not to replace reality, but to elevate it:
+      cinematic grading, atmospheric enhancement in the night sequences, and targeted VFX in the 30 to 45 shots
+      that benefit from it. The result will not look like an "AI movie." It will look like a film
+      made by filmmakers who knew exactly what they were doing.
+    </p>
+    <p class="body-text mt-14">
+      Below, I present two production scenarios — a <strong>Conservative Budget (₹58 Lakhs)</strong> and a
+      <strong>Comfortable Budget (₹90 Lakhs)</strong> — along with my honest recommendation on which path
+      gives this film the future it deserves.
+    </p>
+  </div>
+</section>
+
+<!-- ══════ BUDGET SCENARIOS ══════ -->
+<section class="section" id="s2">
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title">Budget Scenarios</h2>
+    <div class="sec-rule"></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-wrap">
+    <button class="tab-btn active" onclick="switchTab('con')">
+      <span class="t-eyebrow">Scenario A</span>
+      <span class="t-name">Conservative</span>
+      <span class="t-amt">₹ 58,00,000</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('com')">
+      <span class="t-eyebrow">Scenario B</span>
+      <span class="t-name">Comfortable</span>
+      <span class="t-amt">₹ 90,00,000</span>
+    </button>
+  </div>
+
+  <!-- ══ CONSERVATIVE ══ -->
+  <div class="scenario active" id="tab-con">
+    <div class="total-banner">
+      <div class="t-lbl">Total Production Budget — Conservative Scenario</div>
+      <div class="t-total">₹ 58 Lakhs</div>
+      <div class="t-note">35-day principal photography &nbsp;·&nbsp; 25-person unit &nbsp;·&nbsp; Entry-level AI toolset</div>
+    </div>
+    <div class="phases">
+
+      <div class="phase p1" onclick="togglePhase(this)">
+        <div class="phase-head">
+          <div class="p-ico">🎬</div>
+          <div class="p-info">
+            <div class="p-name">Phase 1 &nbsp;—&nbsp; Pre-Production</div>
+            <div class="p-sub">4–6 weeks before principal photography</div>
+          </div>
+          <div class="p-right"><div class="p-amt">₹ 6,00,000</div><div class="p-pct">10.3 %</div></div>
+          <span class="chev">▼</span>
+        </div>
+        <div class="p-bar"><div class="p-bar-fill" style="width:10.3%"></div></div>
+        <div class="p-body">
+          <div class="li"><span class="li-name">Script breakdown, scheduling & production plan</span><span class="li-amt">₹ 1,50,000</span></div>
+          <div class="li"><span class="li-name">Location recce & permit acquisition</span><span class="li-amt">₹ 1,50,000</span></div>
+          <div class="li"><span class="li-name">Animal pre-arrangement & on-set rehearsals</span><span class="li-amt">₹ 1,00,000</span></div>
+          <div class="li"><span class="li-name">Art direction & production design setup</span><span class="li-amt">₹ 1,00,000</span></div>
+          <div class="li"><span class="li-name">Casting process & auditions</span><span class="li-amt">₹ 1,00,000</span></div>
+        </div>
+      </div>
+
+      <div class="phase p2" onclick="togglePhase(this)">
+        <div class="phase-head">
+          <div class="p-ico">📽️</div>
+          <div class="p-info">
+            <div class="p-name">Phase 2 &nbsp;—&nbsp; Principal Photography</div>
+            <div class="p-sub">35 shooting days &nbsp;·&nbsp; 25-person unit</div>
+          </div>
+          <div class="p-right"><div class="p-amt">₹ 20,00,000</div><div class="p-pct">34.5 %</div></div>
+          <span class="chev">▼</span>
+        </div>
+        <div class="p-bar"><div class="p-bar-fill" style="width:34.5%"></div></div>
+        <div class="p-body">
+          <div class="li"><span class="li-name">Camera & equipment rental (DSLR / entry-mirrorless grade)</span><span class="li-amt">₹ 3,00,000</span></div>
+          <div class="li"><span class="li-name">Director of Photography fees</span><span class="li-amt">₹ 1,50,000</span></div>
+          <div class="li"><span class="li-name">Sound team & recording equipment</span><span class="li-amt">₹ 2,00,000</span></div>
+          <div class="li"><span class="li-name">Cast fees — leads, supporting cast & background artists</span><span class="li-amt">₹ 5,00,000</span></div>
+          <div class="li"><span class="li-name">Crew salaries — 25-person unit for 35 days</span><span class="li-amt">₹ 5,00,000</span></div>
+          <div class="li"><span class="li-name">Location, travel & accommodation</span><span class="li-amt">₹ 2,50,000</span></div>
+          <div class="li"><span class="li-name">Animal handler & cow/bull hire</span><span class="li-amt">₹ 1,00,000</span></div>
+        </div>
+      </div>
+
+      <div class="phase p3" onclick="togglePhase(this)">
+        <div class="phase-head">
+          <div class="p-ico">✨</div>
+          <div class="p-info">
+            <div class="p-name">Phase 3 &nbsp;—&nbsp; Post-Production (AI-Hybrid)</div>
+            <div class="p-sub">AI enhancement · colour · sound · music · DCP</div>
+          </div>
+          <div class="p-right"><div class="p-amt">₹ 18,00,000</div><div class="p-pct">31.0 %</div></div>
+          <span class="chev">▼</span>
+        </div>
+        <div class="p-bar"><div class="p-bar-fill" style="width:31%"></div></div>
+        <div class="p-body">
+          <div class="li"><span class="li-name">AI tool access — Kling 3.0, Seedance 2.0, Higgsfield (standard tier)</span><span class="li-amt">₹ 3,00,000</span></div>
+          <div class="li"><span class="li-name">AI specialist operator — execution & quality control</span><span class="li-amt">₹ 2,00,000</span></div>
+          <div class="li"><span class="li-name">Colour grading — DaVinci Resolve</span><span class="li-amt">₹ 2,00,000</span></div>
+          <div class="li"><span class="li-name">VFX work — 20 to 30 targeted shots</span><span class="li-amt">₹ 3,00,000</span></div>
+          <div class="li"><span class="li-name">Sound design, Foley & final theatrical mix</span><span class="li-amt">₹ 3,00,000</span></div>
+          <div class="li"><span class="li-name">Music composition & recording</span><span class="li-amt">₹ 4,00,000</span></div>
+          <div class="li"><span class="li-name">DCP (Digital Cinema Package) creation & quality check</span><span class="li-amt">₹ 1,00,000</span></div>
+        </div>
+      </div>
+
+      <div class="phase p4" onclick="togglePhase(this)">
+        <div class="phase-head">
+          <div class="p-ico">⚖️</div>
+          <div class="p-info">
+            <div class="p-name">Phase 4 &nbsp;—&nbsp; Legal & Compliance</div>
+            <div class="p-sub">Copyright · clearances · CBFC certification</div>
+          </div>
+          <div class="p-right"><div class="p-amt">₹ 3,00,000</div><div class="p-pct">5.2 %</div></div>
+          <span class="chev">▼</span>
+        </div>
+        <div class="p-bar"><div class="p-bar-fill" style="width:5.2%"></div></div>
+        <div class="p-body">
+          <div class="li"><span class="li-name">Director / producer production agreement (legal drafting)</span><span class="li-amt">₹ 50,000</span></div>
+          <div class="li"><span class="li-name">Film copyright registration — separate from script copyright</span><span class="li-amt">₹ 75,000</span></div>
+          <div class="li"><span class="li-name">Actor & location release agreements</span><span class="li-amt">₹ 75,000</span></div>
+          <div class="li"><span class="li-name">CBFC certification process (U certificate expected)</span><span class="li-amt">₹ 75,000</span></div>
+          <div class="li"><span class="li-name">Music licensing documentation</span><span class="li-amt">₹ 25,000</span></div>
+        </div>
+      </div>
+
+      <div class="phase p5" onclick="togglePhase(this)">
+        <div class="phase-head">
+          <div class="p-ico">📣</div>
+          <div class="p-info">
+            <div class="p-name">Phase 5 &nbsp;—&nbsp; Digital & Social Marketing</div>
+            <div class="p-sub">Soft digital presence only &nbsp;·&nbsp; See note in Section 05</div>
+          </div>
+          <div class="p-right"><div class="p-amt">₹ 6,00,000</div><div class="p-pct">10.3 %</div></div>
+          <span class="chev">▼</span>
+        </div>
+        <div class="p-bar"><div class="p-bar-fill" style="width:10.3%"></div></div>
+        <div class="p-body">
+          <div class="li"><span class="li-name">Trailer cut & promotional video content</span><span class="li-amt">₹ 1,50,000</span></div>
+          <div class="li"><span class="li-name">Poster design & press kit</span><span class="li-amt">₹ 1,00,000</span></div>
+          <div class="li"><span class="li-name">Social media campaign — organic + light paid</span><span class="li-amt">₹ 2,00,000</span></div>
+          <div class="li"><span class="li-name">Select film festival submissions</span><span class="li-amt">₹ 1,50,000</span></div>
+        </div>
+      </div>
+
+      <div class="phase pc" onclick="togglePhase(this)">
+        <div class="phase-head">
+          <div class="p-ico">🛡️</div>
+          <div class="p-info">
+            <div class="p-name">Contingency Reserve</div>
+            <div class="p-sub">~8% buffer for weather, delays & reshoots</div>
+          </div>
+          <div class="p-right"><div class="p-amt">₹ 5,00,000</div><div class="p-pct">8.6 %</div></div>
+          <span class="chev">▼</span>
+        </div>
+        <div class="p-bar"><div class="p-bar-fill" style="width:8.6%"></div></div>
+        <div class="p-body">
+          <div class="li"><span class="li-name">Weather delays & outdoor shoot overruns</span><span class="li-amt">₹ 2,00,000</span></div>
+          <div class="li"><span class="li-name">Minor reshoot or additional pickup days</span><span class="li-amt">₹ 1,50,000</span></div>
+          <div class="li"><span class="li-name">Equipment replacement / emergency hire</span><span class="li-amt">₹ 1,50,000</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end conservative -->
+
+  <!-- ══ COMFORTABLE ══ -->
+  <div class="scenario" id="tab-com">
+    <div class="total-banner">
+      <div class="t-lbl">Total Production Budget — Comfortable Scenario</div>
+      <div class="t-total">₹ 90 Lakhs</div>
+      <div class="t-note">40-day principal photography &nbsp;·&nbsp; 30-person unit &nbsp;·&nbsp; Full AI pipeline + senior specialist</div>
+    </div>
+    <div class="phases">
+
+      <div class="phase p1" onclick="togglePhase(this)">
+        <div class="phase-head">
+          <div class="p-ico">🎬</div>
+          <div class="p-info">
+            <div class="p-name">Phase 1 &nbsp;—&nbsp; Pre-Production</div>
+            <div class="p-sub">6–8 weeks before principal photography</div>
+          </div>
+          <div class="p-right"><div class="p-amt">₹ 9,00,000</div><div class="p-pct">10.0 %</div></div>
+          <span class="chev">▼</span>
+        </div>
+        <div class="p-bar"><div class="p-bar-fill" style="width:10%"></div></div>
+        <div class="p-body">
+          <div class="li"><span class="li-name">Script breakdown, detailed scheduling & production plan</span><span class="li-amt">₹ 2,00,000</span></div>
+          <div class="li"><span class="li-name">Location recce (multiple visits) & permit acquisition</span><span class="li-amt">₹ 2,50,000</span></div>
+          <div class="li"><span class="li-name">Animal pre-arrangement, rehearsals & insurance</span><span class="li-amt">₹ 2,00,000</span></div>
+          <div class="li"><span class="li-name">Art direction, set dressing & production design</span><span class="li-amt">₹ 1,50,000</span></div>
+          <div class="li"><span class="li-name">Casting — multiple rounds + child acting coach</span><span class="li-amt">₹ 1,00,000</span></div>
+        </div>
+      </div>
+
+      <div class="phase p2" onclick="togglePhase(this)">
+        <div class="phase-head">
+          <div class="p-ico">📽️</div>
+          <div class="p-info">
+            <div class="p-name">Phase 2 &nbsp;—&nbsp; Principal Photography</div>
+            <div class="p-sub">40 shooting days &nbsp;·&nbsp; 30-person unit</div>
+          </div>
+          <div class="p-right"><div class="p-amt">₹ 28,00,000</div><div class="p-pct">31.1 %</div></div>
+          <span class="chev">▼</span>
+        </div>
+        <div class="p-bar"><div class="p-bar-fill" style="width:31.1%"></div></div>
+        <div class="p-body">
+          <div class="li"><span class="li-name">Camera & equipment rental (Sony FX6 / cinema-grade)</span><span class="li-amt">₹ 4,00,000</span></div>
+          <div class="li"><span class="li-name">Director of Photography fees</span><span class="li-amt">₹ 2,50,000</span></div>
+          <div class="li"><span class="li-name">Sound team & professional recording equipment</span><span class="li-amt">₹ 2,00,000</span></div>
+          <div class="li"><span class="li-name">Cast fees — leads, supporting cast & background artists</span><span class="li-amt">₹ 7,00,000</span></div>
+          <div class="li"><span class="li-name">Crew salaries — 30-person unit for 40 days</span><span class="li-amt">₹ 6,00,000</span></div>
+          <div class="li"><span class="li-name">Location, travel & accommodation (40 days)</span><span class="li-amt">₹ 5,00,000</span></div>
+          <div class="li"><span class="li-name">Animal handler, cow/bull hire & insurance coverage</span><span class="li-amt">₹ 1,50,000</span></div>
+        </div>
+      </div>
+
+      <div class="phase p3" onclick="togglePhase(this)">
+        <div class="phase-head">
+          <div class="p-ico">✨</div>
+          <div class="p-info">
+            <div class="p-name">Phase 3 &nbsp;—&nbsp; Post-Production (AI-Hybrid)</div>
+            <div class="p-sub">Full AI pipeline · senior operator · live music hybrid</div>
+          </div>
+          <div class="p-right"><div class="p-amt">₹ 30,00,000</div><div class="p-pct">33.3 %</div></div>
+          <span class="chev">▼</span>
+        </div>
+        <div class="p-bar"><div class="p-bar-fill" style="width:33.3%"></div></div>
+        <div class="p-body">
+          <div class="li"><span class="li-name">Full AI platform access — Kling 3.0, Seedance 2.0, Higgsfield (professional tier)</span><span class="li-amt">₹ 5,00,000</span></div>
+          <div class="li"><span class="li-name">Senior AI specialist operator — 60-day post-production period</span><span class="li-amt">₹ 4,00,000</span></div>
+          <div class="li"><span class="li-name">Colour grading — senior colourist, DaVinci Resolve</span><span class="li-amt">₹ 3,50,000</span></div>
+          <div class="li"><span class="li-name">VFX work — 35 to 45 shots at enhanced quality budget per shot</span><span class="li-amt">₹ 7,00,000</span></div>
+          <div class="li"><span class="li-name">Sound design, Foley & final theatrical mix</span><span class="li-amt">₹ 3,00,000</span></div>
+          <div class="li"><span class="li-name">Music — live instruments + AI-assisted composition hybrid</span><span class="li-amt">₹ 6,00,000</span></div>
+          <div class="li"><span class="li-name">DCP creation, quality check & full delivery package</span><span class="li-amt">₹ 1,50,000</span></div>
+        </div>
+      </div>
+
+      <div class="phase p4" onclick="togglePhase(this)">
+        <div class="phase-head">
+          <div class="p-ico">⚖️</div>
+          <div class="p-info">
+            <div class="p-name">Phase 4 &nbsp;—&nbsp; Legal & Compliance</div>
+            <div class="p-sub">Full coverage including E&O insurance</div>
+          </div>
+          <div class="p-right"><div class="p-amt">₹ 5,00,000</div><div class="p-pct">5.6 %</div></div>
+          <span class="chev">▼</span>
+        </div>
+        <div class="p-bar"><div class="p-bar-fill" style="width:5.6%"></div></div>
+        <div class="p-body">
+          <div class="li"><span class="li-name">Director / producer production agreement (full legal drafting)</span><span class="li-amt">₹ 1,00,000</span></div>
+          <div class="li"><span class="li-name">Film copyright registration — separate cinematographic work</span><span class="li-amt">₹ 1,00,000</span></div>
+          <div class="li"><span class="li-name">Actor & location release agreements (full distribution clearance)</span><span class="li-amt">₹ 1,00,000</span></div>
+          <div class="li"><span class="li-name">CBFC certification (U certificate process)</span><span class="li-amt">₹ 1,00,000</span></div>
+          <div class="li"><span class="li-name">Music licensing + Errors & Omissions (E&O) insurance</span><span class="li-amt">₹ 1,00,000</span></div>
+        </div>
+      </div>
+
+      <div class="phase p5" onclick="togglePhase(this)">
+        <div class="phase-head">
+          <div class="p-ico">📣</div>
+          <div class="p-info">
+            <div class="p-name">Phase 5 &nbsp;—&nbsp; Digital & Social Marketing</div>
+            <div class="p-sub">Soft digital presence only &nbsp;·&nbsp; See note in Section 05</div>
+          </div>
+          <div class="p-right"><div class="p-amt">₹ 10,00,000</div><div class="p-pct">11.1 %</div></div>
+          <span class="chev">▼</span>
+        </div>
+        <div class="p-bar"><div class="p-bar-fill" style="width:11.1%"></div></div>
+        <div class="p-body">
+          <div class="li"><span class="li-name">Trailer, 2 teasers & social content creation</span><span class="li-amt">₹ 2,50,000</span></div>
+          <div class="li"><span class="li-name">Poster design, press kit & Electronic Press Kit (EPK)</span><span class="li-amt">₹ 1,50,000</span></div>
+          <div class="li"><span class="li-name">Social media campaign — 3-month pre-release window</span><span class="li-amt">₹ 3,00,000</span></div>
+          <div class="li"><span class="li-name">Film festival circuit — India + selected international</span><span class="li-amt">₹ 2,00,000</span></div>
+          <div class="li"><span class="li-name">Initial PR & press coverage</span><span class="li-amt">₹ 1,00,000</span></div>
+        </div>
+      </div>
+
+      <div class="phase pc" onclick="togglePhase(this)">
+        <div class="phase-head">
+          <div class="p-ico">🛡️</div>
+          <div class="p-info">
+            <div class="p-name">Contingency Reserve</div>
+            <div class="p-sub">~10% buffer — reshoots, delays, unplanned costs</div>
+          </div>
+          <div class="p-right"><div class="p-amt">₹ 8,00,000</div><div class="p-pct">8.9 %</div></div>
+          <span class="chev">▼</span>
+        </div>
+        <div class="p-bar"><div class="p-bar-fill" style="width:8.9%"></div></div>
+        <div class="p-body">
+          <div class="li"><span class="li-name">Weather delays & rural shoot overruns</span><span class="li-amt">₹ 2,50,000</span></div>
+          <div class="li"><span class="li-name">Additional pickup & reshoot days</span><span class="li-amt">₹ 3,00,000</span></div>
+          <div class="li"><span class="li-name">Equipment, animal or crew emergencies</span><span class="li-amt">₹ 2,50,000</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end comfortable -->
+
+</section>
+
+<!-- ══════ AI STRATEGY ══════ -->
+<section class="section" id="s3">
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <h2 class="sec-title">AI Technology Partnership Strategy</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="ai-wrap">
+    <div class="ai-badge">⚡ Strategic Opportunity</div>
+    <h3 class="ai-title">Turning Our Tools Into Co-Partners</h3>
+    <p class="body-text">
+      The AI tools central to this production — Kling 3.0, Seedance 2.0, and Higgsfield — are not merely
+      software subscriptions. They represent companies actively working to establish their platforms as
+      credible, professional-grade filmmaking tools in the Indian market. We are in a position to offer
+      them something they cannot buy through conventional marketing: a real, theatrically-released feature
+      film built using their technology as a core production component.
+    </p>
+    <div class="ai-tools">
+      <span class="ai-tag">Kling 3.0</span>
+      <span class="ai-tag">Seedance 2.0</span>
+      <span class="ai-tag">Higgsfield</span>
+    </div>
+    <p class="body-text">
+      <strong>The pitch to these companies is straightforward:</strong> We are producing the first AI-hybrid
+      feature film in India targeting theatrical release. We are not creating a YouTube short or a demo reel.
+      We are creating a case study that will be watched, reviewed, and discussed across the Indian film
+      industry — the third-largest film market in the world. The template we establish here will be followed
+      by thousands of independent Indian filmmakers. Their logo, their credit, and their name on this film
+      is a gateway into that entire ecosystem.
+    </p>
+    <div class="ai-pull">
+      <strong>What to ask for in the partnership:</strong><br><br>
+      (a) <strong>Tool access credits</strong> — free or heavily subsidised platform access for the
+      full post-production period, worth approximately ₹3–5 Lakhs in the budget.<br><br>
+      (b) <strong>Dedicated technical advisor</strong> — a specialist from their internal team assigned
+      to our post-production pipeline. This is the real value: their own engineers and artists know
+      platform capabilities and quality techniques that no public tutorial covers. This expert access
+      alone can elevate every AI-enhanced frame in the film.<br><br>
+      (c) <strong>Co-branding on promotional materials</strong> — their logo in the opening credits,
+      press materials, and festival submissions. A low-cost ask for us; high-value visibility for them.<br><br>
+      A successful partnership here could reduce the post-production AI tooling cost from ₹3–5 Lakhs
+      to near zero — while simultaneously securing technical support that materially improves the film's
+      final quality. This is a sponsorship worth pursuing before the project enters post-production.
+    </div>
+  </div>
+</section>
+
+<!-- ══════ LEGAL ══════ -->
+<section class="section" id="s4">
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <h2 class="sec-title">Legal, Copyright & Compliance</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="legal-wrap">
+    <h3 class="legal-title">What Is Already Protected — and What Still Needs to Be Done</h3>
+    <p class="body-text">
+      The screenplay of <em>Radha and the Great Rescue</em> is already protected. Uplifting Cinema Pvt. Ltd.
+      holds WGA registration number 1977016 and Indian Copyright Office diary number 2825/2019-CO/L.
+      This is foundational and properly handled. What follows outlines the
+      <strong>additional legal layer</strong> required once production begins — because the completed film
+      as a creative work is a separate, independent copyright from the screenplay.
+    </p>
+    <div class="legal-existing">
+      <strong>Already Secured:</strong> Script copyright — WGA Reg. 1977016 &nbsp;·&nbsp; Copyright Diary 2825/2019-CO/L
+      &nbsp;·&nbsp; Uplifting Cinema Pvt. Ltd. (Mumbai) as rights holder.
+    </div>
+    <div class="legal-grid">
+      <div class="legal-item">
+        <div class="l-dot"></div>
+        <div class="l-txt">
+          <strong>Film Copyright Registration</strong><br>
+          The completed film must be registered separately under the Indian Copyright Act as a
+          cinematographic work. This is distinct from the script registration and should be filed
+          within 60 days of final delivery.
+        </div>
+      </div>
+      <div class="legal-item">
+        <div class="l-dot"></div>
+        <div class="l-txt">
+          <strong>Production & Directorial Agreement</strong><br>
+          A properly drafted agreement between the director and the production company covering
+          IP ownership, revenue share, screen credit, and creative rights — executed before
+          a single day of principal photography begins.
+        </div>
+      </div>
+      <div class="legal-item">
+        <div class="l-dot"></div>
+        <div class="l-txt">
+          <strong>Actor Release Forms</strong><br>
+          All cast — including background artists and child actors (requiring additional parental
+          consent forms) — must sign image and performance releases cleared for theatrical,
+          OTT, and international distribution.
+        </div>
+      </div>
+      <div class="legal-item">
+        <div class="l-dot"></div>
+        <div class="l-txt">
+          <strong>Location Agreements & NOCs</strong><br>
+          All filming locations — goshala, riverbank, villages, rural roads — require signed
+          release agreements. Government or public locations need additional No Objection
+          Certificates from the relevant authority.
+        </div>
+      </div>
+      <div class="legal-item">
+        <div class="l-dot"></div>
+        <div class="l-txt">
+          <strong>CBFC Certification</strong><br>
+          Mandatory for any theatrical release in India. Given the film's family-friendly content —
+          no violence, no adult material — a U certificate is the expected outcome.
+          This is a marketing asset: it opens school screenings, family audiences, and OTT placements.
+        </div>
+      </div>
+      <div class="legal-item">
+        <div class="l-dot"></div>
+        <div class="l-txt">
+          <strong>Music Licensing & E&O Insurance</strong><br>
+          All original compositions must be registered. Errors & Omissions (E&O) insurance
+          is a non-negotiable requirement for acquisition by major OTT platforms
+          (Netflix India, Amazon Prime, ZEE5, SonyLIV) and most international distributors.
+          This is included in the Comfortable scenario only.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ MARKETING NOTE ══════ -->
+<section class="section" id="s5">
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <h2 class="sec-title">A Note on Marketing & Distribution</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="mkt-wrap">
+    <h3 class="mkt-title">Digital Presence Is in the Budget. Theatrical P&A Is Not.</h3>
+    <p class="body-text">
+      Both budget scenarios include a soft digital and social media marketing allocation —
+      ₹6 Lakhs in the Conservative scenario and ₹10 Lakhs in the Comfortable scenario.
+      This covers trailer creation, poster design, social media campaigns, a light PR push,
+      and select film festival submissions. This is sufficient to build the film's identity
+      online and begin audience awareness ahead of release.
+    </p>
+    <p class="body-text mt-14">
+      However, it is important to state clearly: full-scale theatrical release marketing —
+      Print & Advertising (P&A), multiplex negotiations, press junkets, wide Out-of-Home
+      campaigns, aggregator fees, and national distribution logistics — constitutes
+      a <strong>separate, additional budget</strong> that has not been projected here.
+      That phase of the film's journey operates on an entirely different financial scale
+      and requires its own dedicated planning, studio or aggregator partnerships,
+      and strategic commitment.
+    </p>
+    <div class="mkt-pull">
+      The marketing numbers in this proposal are my best estimate for a smart, lean
+      digital-first presence that serves the film well during its festival and
+      pre-release window. Full-fledged theatrical and OTT marketing is a conversation
+      I believe the production company is better positioned to plan and lead — and I
+      trust that the right strategy and partnerships already exist, or will be developed,
+      for that critical phase.
+    </div>
+  </div>
+</section>
+
+<!-- ══════ COMPARISON ══════ -->
+<section class="section" id="s6">
+  <div class="sec-head">
+    <span class="sec-num">06</span>
+    <h2 class="sec-title">Scenario Comparison</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="glass" style="padding:0;overflow:hidden;">
+    <div class="comp-scroll">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Conservative &nbsp;—&nbsp; ₹ 58 Lakhs</th>
+            <th>Comfortable &nbsp;—&nbsp; ₹ 90 Lakhs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Shoot Duration</td>
+            <td>35 days</td>
+            <td>40 days — extra 5 for pickups, animal, complex scenes</td>
+          </tr>
+          <tr>
+            <td>Crew Size</td>
+            <td>25-person unit</td>
+            <td>30-person unit — additional departments</td>
+          </tr>
+          <tr>
+            <td>Camera System</td>
+            <td>DSLR / entry mirrorless — Canon R5C / Sony FX3 grade</td>
+            <td>Cinema mirrorless — Sony FX6 + prime lens package</td>
+          </tr>
+          <tr>
+            <td>AI Toolset</td>
+            <td>Standard plan subscriptions across platforms</td>
+            <td>Professional / enterprise tier — full access, all three platforms</td>
+          </tr>
+          <tr>
+            <td>AI Operator</td>
+            <td>Mid-level operator with AI tool experience</td>
+            <td>Senior specialist with theatrical delivery experience</td>
+          </tr>
+          <tr>
+            <td>VFX Shots</td>
+            <td>20–30 targeted shots</td>
+            <td>35–45 shots at a higher per-shot quality budget</td>
+          </tr>
+          <tr>
+            <td>Music</td>
+            <td>AI-assisted composition + basic studio recording</td>
+            <td>Live instruments + AI-assisted hybrid composition</td>
+          </tr>
+          <tr>
+            <td>Animal Coverage</td>
+            <td>Handler + rental — no insurance</td>
+            <td>Handler + rental + full animal insurance coverage</td>
+          </tr>
+          <tr>
+            <td>Legal Coverage</td>
+            <td>Essential documentation only</td>
+            <td>Full coverage including E&O insurance (required by OTT)</td>
+          </tr>
+          <tr>
+            <td>Contingency Buffer</td>
+            <td>₹ 5 Lakhs (~8%)</td>
+            <td>₹ 8 Lakhs (~10%) — appropriate for a 40-day rural shoot</td>
+          </tr>
+          <tr>
+            <td>Festival Strategy</td>
+            <td>Select domestic festivals only</td>
+            <td>India + selected international film festival circuit</td>
+          </tr>
+          <tr>
+            <td>OTT Ready on Delivery</td>
+            <td>Partial — E&O insurance missing</td>
+            <td>Fully OTT-ready — all platform requirements met</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ RECOMMENDATION ══════ -->
+<section class="section" id="s7">
+  <div class="sec-head">
+    <span class="sec-num">07</span>
+    <h2 class="sec-title">Director's Recommendation</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="rec-wrap">
+    <h3 class="rec-title">My Recommendation: Go Comfortable</h3>
+    <p class="rec-body">
+      I want to be direct. The Conservative scenario at ₹58 Lakhs will get us through production —
+      the film will be shot, edited, and delivered. But it will arrive at the finish line without
+      the oxygen it needs to compete in the real world. The missing E&O insurance alone means no
+      major OTT platform will acquire the film without a further investment. A mid-level AI operator
+      means the very technology that makes this production viable gets underused. And a 35-day shoot
+      for a script this rich in locations, animals, child-performance-dependent scenes, and rural
+      coverage is operating on borrowed time from the first day.
+    </p>
+    <p class="rec-body">
+      The Comfortable scenario at ₹90 Lakhs delivers the same film — but finished, protected, and
+      ready for every distribution window available to it: theatrical, OTT, festival circuit, and
+      international sales. The additional ₹32 Lakhs is not extravagance. It is the difference
+      between a film that exists and a film that competes.
+    </p>
+    <div class="rec-box">
+      <strong>My recommended budget range to approve:</strong><br>
+      <span class="rec-big">₹ 85 Lakhs &nbsp;to&nbsp; ₹ 1 Crore</span>
+      This gives us the Comfortable production model with additional flexibility for AI company
+      partnership development, any co-production conversation costs, and the legal and compliance
+      requirements of a proper theatrical release. A film of this quality and this heart —
+      produced at this price point using the most current filmmaking technology available — is a
+      genuine opportunity. I believe it deserves to be made the right way.
+    </div>
+  </div>
+</section>
+
+<!-- ══════ FOOTER ══════ -->
+<footer class="footer">
+  <p class="foot-text">Radha and the Great Rescue &nbsp;·&nbsp; Production Budget Proposal &nbsp;·&nbsp; Confidential</p>
+  <p class="foot-text">© 2022 Uplifting Cinema Pvt. Ltd. &nbsp;·&nbsp; WGA Reg. 1977016 &nbsp;·&nbsp; Copyright Diary 2825/2019-CO/L</p>
+</footer>
+
+</div><!-- end wrapper -->
+
+<script>
+// ─── Tab switching ───
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && id === 'con') || (i === 1 && id === 'com'));
+  });
+  document.querySelectorAll('.scenario').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+// ─── Phase accordion ───
+function togglePhase(card) {
+  const isOpen = card.classList.contains('open');
+  // close siblings
+  card.closest('.phases').querySelectorAll('.phase.open').forEach(c => c.classList.remove('open'));
+  if (!isOpen) card.classList.add('open');
+}
+
+// ─── Scroll-reveal ───
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.section').forEach(s => io.observe(s));
+</script>
+
+</body>
+</html>
