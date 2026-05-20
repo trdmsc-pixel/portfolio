@@ -24,6 +24,7 @@ import { isSupabaseConfigured, supabase } from './lib/supabase'
 gsap.registerPlugin(ScrollTrigger)
 
 import { useCmsStore, logo } from './lib/store'
+import { trackMetaEvent } from './lib/metaPixel'
 
 function scrollToId(id) {
   document.querySelector(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -428,7 +429,13 @@ function Work() {
               <SectionKicker>Our Work Speaks</SectionKicker>
               <h2 className="section-heading">{hero.portfolio_heading || 'EVERY FRAME, A WORLD.'}</h2>
             </div>
-            <a href={`https://www.instagram.com/${settings.instagram_handle?.replace('@', '') || 'notshaam'}`} target="_blank" rel="noreferrer" className="glass flex w-fit items-center gap-3 rounded-2xl px-4 py-3 font-body text-xs font-black uppercase tracking-[0.18em] text-magenta">
+            <a
+              href={`https://www.instagram.com/${settings.instagram_handle?.replace('@', '') || 'notshaam'}`}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackMetaEvent('Contact', {}, { contact_method: 'instagram', location: 'work_section' })}
+              className="glass flex w-fit items-center gap-3 rounded-2xl px-4 py-3 font-body text-xs font-black uppercase tracking-[0.18em] text-magenta"
+            >
               <Camera size={18} /> {settings.instagram_handle || '@notshaam'} — Follow Us <ExternalLink size={14} />
             </a>
           </div>
@@ -441,7 +448,17 @@ function Work() {
                 onClick={() => {
                   if (item.video_url) {
                     setActiveItem(item)
+                    trackMetaEvent('ViewContent', {}, {
+                      content_name: item.title,
+                      content_category: item.category || 'Portfolio Video',
+                      content_ids: [item.id]
+                    })
                   } else if (item.thumbnail) {
+                    trackMetaEvent('ViewContent', {}, {
+                      content_name: item.title,
+                      content_category: item.category || 'Portfolio Image',
+                      content_ids: [item.id]
+                    })
                     // Fallback to opening thumbnail if there's no video but user clicks
                     window.open(item.thumbnail, '_blank', 'noopener,noreferrer')
                   }
@@ -583,6 +600,19 @@ function Contact({ settings }) {
           console.warn('Email notification skipped:', emailErr.message)
         }
       }
+
+      // Track Meta Ads Lead event (Pixel + CAPI)
+      trackMetaEvent('Lead', {
+        email: values.email,
+        phone: values.phone,
+        fullName: values.full_name,
+      }, {
+        content_name: values.grade_selected || 'Project Inquiry',
+        content_category: values.content_type || 'Lead',
+        value: 0.00,
+        currency: 'INR'
+      })
+
       setSent(true)
       reset()
       toast.success("Your vision has been received. We'll be in touch within 24 hours.")
@@ -624,7 +654,16 @@ function Contact({ settings }) {
             </div>
           )}
         </form>
-        <p className="mt-5 text-center font-body text-sm text-white/35">Business email: {settings.agency_email}</p>
+        <p className="mt-5 text-center font-body text-sm text-white/35">
+          Business email:{' '}
+          <a
+            href={`mailto:${settings.agency_email}`}
+            onClick={() => trackMetaEvent('Contact', {}, { contact_method: 'email', location: 'contact_section' })}
+            className="text-cyan hover:underline transition-colors"
+          >
+            {settings.agency_email}
+          </a>
+        </p>
       </div>
     </section>
   )
@@ -736,8 +775,24 @@ function Footer({ settings, navigate }) {
           {legalLinks.map((link) => <button key={link.name} onClick={() => navigate(link.path)} className="text-left font-body text-xs font-bold uppercase tracking-[0.18em] text-white/45 hover:text-cyan">{link.name}</button>)}
         </div>
         <div className="md:text-right">
-          <a href={`https://www.instagram.com/${settings.instagram_handle?.replace('@', '') || 'notshaam'}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-end gap-2 font-body text-sm font-bold text-magenta w-full"><Camera size={18} /> {settings.instagram_handle || '@notshaam'}</a>
-          <p className="mt-3 font-body text-sm text-white/42">{settings.agency_email}</p>
+          <a
+            href={`https://www.instagram.com/${settings.instagram_handle?.replace('@', '') || 'notshaam'}`}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => trackMetaEvent('Contact', {}, { contact_method: 'instagram', location: 'footer' })}
+            className="inline-flex items-center justify-end gap-2 font-body text-sm font-bold text-magenta w-full"
+          >
+            <Camera size={18} /> {settings.instagram_handle || '@notshaam'}
+          </a>
+          <p className="mt-3 font-body text-sm text-white/42">
+            <a
+              href={`mailto:${settings.agency_email}`}
+              onClick={() => trackMetaEvent('Contact', {}, { contact_method: 'email', location: 'footer' })}
+              className="hover:text-cyan transition-colors"
+            >
+              {settings.agency_email}
+            </a>
+          </p>
         </div>
       </div>
       <div className="mx-auto mt-10 max-w-7xl border-t border-white/10 pt-6 text-center font-body text-xs text-white/32">
@@ -764,6 +819,13 @@ export default function PublicSite() {
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
+
+  useEffect(() => {
+    trackMetaEvent('ViewContent', {}, {
+      content_name: currentPath === '/' ? 'Home' : currentPath,
+      content_type: 'page'
+    })
+  }, [currentPath])
 
   const navigate = (path) => {
     window.history.pushState({}, '', path)
